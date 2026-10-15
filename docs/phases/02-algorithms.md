@@ -22,9 +22,9 @@ or retain mutable state between runs. The application remains responsible for co
 shared input and enforcing normal per-algorithm size admission. Frequency additionally
 guards its histogram allocation in the implementation.
 
-`workload` is an admission estimate rather than a theoretical complexity claim. Quick's
-`n_log_n` classification describes normal work; its quadratic worst case and hard size
-limit remain explicit.
+`workload` is an admission estimate rather than a theoretical complexity claim. Phase 4
+review found adversarial median-of-three inputs and tightened Quick's admission from the
+initial `n_log_n` estimate to `quadratic`. The average complexity remains O(n log n).
 
 ## Validation
 

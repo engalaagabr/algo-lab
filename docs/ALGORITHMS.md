@@ -74,12 +74,13 @@ heap, and quick make no stability guarantee.
 value array. Quick Sort still needs its explicitly reported O(log n) bookkeeping stack.
 Frequency Sort has `in_place=False` because it allocates the O(k) histogram.
 
-The application uses `workload` as an admission estimate: `quadratic` for the seven
-conservatively capped algorithms, `n_log_n` for Heap and Quick, and `linear_range` for
-Frequency. This classification is separate from theoretical complexity. In particular,
-Quick's admission estimate describes normal work and does not erase its quadratic worst
-case. Its hard 10,000-element limit still applies. Normal size admission is the
-application's responsibility; Frequency also checks its allocation span inside the sort.
+The application uses `workload` as an admission estimate: `quadratic` for Quick and the
+seven conservatively capped algorithms, `n_log_n` for Heap, and `linear_range` for Frequency.
+Quick reserves quadratic work to account for adversarial median-of-three inputs; its
+theoretical average remains O(n log n). A hard size limit and the aggregate work budget
+both apply, so large repeated Quick experiments may be rejected below 10,000 elements.
+Size admission is the application's responsibility; Frequency also checks its allocation
+span inside the sort. These admission units are not a hard CPU-time guarantee.
 
 ## Metrics and trace semantics
 
