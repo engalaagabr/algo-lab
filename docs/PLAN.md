@@ -13,6 +13,10 @@ baseline until a release is explicitly requested.
 | 4 | `feat/fastapi-endpoints` | Versioned API, validation, isolated CPU execution, OpenAPI |
 | 5 | `feat/integration-docs` | Integration verification, usage examples, deployment docs |
 
+All five phases are complete and integrated into `dev`. See the corresponding numbered
+reports under [phases](phases/) for changes and validation. The completed handover is
+documented in [phase 5](phases/05-integration.md).
+
 ## Initial implementation choices
 
 - Integers, including negative and duplicate values; ascending ordering.
