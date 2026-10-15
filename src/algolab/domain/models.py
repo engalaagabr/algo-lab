@@ -28,6 +28,7 @@ class AlgorithmMetadata:
     comparison_based: bool = True
     max_size: int = 1000
     max_value_range: int | None = None
+    workload: Literal["quadratic", "n_log_n", "linear_range"] = "quadratic"
 
 
 @dataclass(frozen=True, slots=True)
