@@ -123,7 +123,8 @@ from theoretical complexity or measured duration:
 | `linear_range` | `max(1, n + actual_value_span)` |
 
 A sort consumes one instrumentation pass plus one optional trace pass. A benchmark consumes
-`1 + warmups + repeats` passes. Suite costs sum every case. The heap and quick implementations
-may use the `n_log_n` admission class while Quick Sort still documents quadratic theoretical
-worst-case time. Hard per-algorithm size limits and outer execution limits remain necessary;
-the work heuristic is not a hard CPU-time guarantee.
+`1 + warmups + repeats` passes. Suite costs sum every case. Heap uses the `n_log_n`
+admission class. Quick reserves quadratic work because adversarial median-of-three inputs
+can cause quadratic execution; its theoretical average is still O(n log n). The aggregate
+budget can reject requests below an algorithm's size limit. Hard size limits and outer
+execution limits remain necessary; the work heuristic is not a hard CPU-time guarantee.

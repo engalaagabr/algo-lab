@@ -22,7 +22,7 @@ metadata = AlgorithmMetadata(
     stable=False,
     in_place=True,
     max_size=10_000,
-    workload="n_log_n",
+    workload="quadratic",
 )
 
 
