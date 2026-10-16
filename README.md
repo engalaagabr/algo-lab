@@ -76,5 +76,6 @@ Read the [API guide](docs/API.md) for request schemas, responses, and limits.
 - [Algorithms and complexity](docs/ALGORITHMS.md)
 - [Benchmark interpretation](docs/BENCHMARKING.md)
 - [Running locally and with Docker](docs/RUNNING.md)
+- [GitHub Actions and Azure deployment](docs/GITHUB-AZURE-CICD.md)
 - [Contributing](CONTRIBUTING.md)
 - [Frontend-to-algorithm flow (Arabic)](docs/FRONTEND-FLOW-AR.md)
