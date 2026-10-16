@@ -174,6 +174,12 @@ body {
   border-radius: var(--radius);
 }
 
+.controls--race {
+  grid-template-columns: minmax(130px, 1.25fr) minmax(165px, 1fr) minmax(130px, 1fr) minmax(105px, 0.8fr);
+  gap: 10px 12px;
+  padding: 12px;
+}
+
 .controls__wide {
   grid-column: 1 / -1;
   display: flex;

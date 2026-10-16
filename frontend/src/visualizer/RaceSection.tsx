@@ -71,13 +71,8 @@ export function RaceSection({ algorithms, selected: racers, onSelect: setRacers 
   const available = algorithms.filter((item) => !racers.includes(item.id))
 
   return (
-    <section className="section" aria-labelledby="race-title">
-      <header className="section__head">
-        <h2 id="race-title">Race</h2>
-        <p>Every algorithm sorts the same array at the same pace, one operation per step. The one that needs the fewest operations finishes first.</p>
-      </header>
-
-      <div className="controls">
+    <section className="section section--race" aria-label="Sorting visualization">
+      <div className="controls controls--race">
         <DatasetFields value={settings} onChange={setSettings} maxSize={MAX_TRACE_SIZE} sizeControl="slider" />
         <div className="controls__wide">
           <span className="controls__heading">Array</span>
