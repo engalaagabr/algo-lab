@@ -82,6 +82,7 @@ export function BenchmarkSection({ algorithms, selected }: BenchmarkSectionProps
     <section className="section" aria-labelledby="benchmark-title">
       <header className="section__head">
         <h2 id="benchmark-title">Benchmark</h2>
+        <p>Compare measured performance on one dataset.</p>
       </header>
 
       <div className="controls">

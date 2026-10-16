@@ -71,7 +71,11 @@ export function RaceSection({ algorithms, selected: racers, onSelect: setRacers 
   const available = algorithms.filter((item) => !racers.includes(item.id))
 
   return (
-    <section className="section section--race" aria-label="Sorting visualization">
+    <section className="section section--race" aria-labelledby="race-title">
+      <header className="section__head">
+        <h2 id="race-title">Race</h2>
+        <p>Watch the selected algorithms sort the same array step by step.</p>
+      </header>
       <div className="controls controls--race">
         <DatasetFields value={settings} onChange={setSettings} maxSize={MAX_TRACE_SIZE} sizeControl="slider" />
         <div className="controls__wide">

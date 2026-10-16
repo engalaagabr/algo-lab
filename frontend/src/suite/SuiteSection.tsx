@@ -111,6 +111,7 @@ export function SuiteSection({ algorithms, selected }: SuiteSectionProps) {
     <section className="section" aria-labelledby="suite-title">
       <header className="section__head">
         <h2 id="suite-title">Suite</h2>
+        <p>Compare how performance changes across input sizes and patterns.</p>
       </header>
 
       <div className="controls">
