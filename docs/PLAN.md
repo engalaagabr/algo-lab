@@ -14,7 +14,7 @@ commits, checks, phase documentation, and merge into `dev`. `main` is reserved f
 | 6 | `feat/docker-compose` | Non-root API image, Compose service, health check, environment template |
 | 7 | `refactor/worker-composition` | Isolate process worker entry points from API composition |
 | 8 | `refactor/mono-repo-layout` | Separate backend and frontend applications at the repository root |
-| 9 | `feat/frontend-scaffold` | Web client: trace visualizer, benchmark and suite pages, generated API types |
+| 9 | `feat/frontend-scaffold` | Web client: sort race, benchmark and suite sections, generated API types |
 
 Phases 1–6 are complete. Phase 7 clarifies the process worker boundary, and phase 8 organizes
 the applications into sibling directories. See the numbered reports under [phases](phases/)

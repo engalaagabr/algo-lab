@@ -15,28 +15,29 @@ export function AlgorithmPicker({ algorithms, selected, onChange, max, inputSize
     onChange(selected.includes(id) ? selected.filter((item) => item !== id) : [...selected, id])
 
   return (
-    <>
-      <h2>
+    <div className="controls__wide">
+      <span className="controls__heading">
         Algorithms <small>up to {max}</small>
-      </h2>
-      <ul className="setup__algorithms">
+      </span>
+      <div className="chips">
         {algorithms.map((algorithm) => {
           const checked = selected.includes(algorithm.id)
           const tooLarge = inputSize > algorithm.max_size
-          const disabled = !checked && (selected.length >= max || tooLarge)
           return (
-            <li key={algorithm.id}>
-              <label className={tooLarge ? 'is-limited' : undefined}>
-                <input type="checkbox" checked={checked} disabled={disabled} onChange={() => toggle(algorithm.id)} />
-                <span>
-                  {algorithm.name}
-                  {tooLarge && <small> max {formatCount(algorithm.max_size)} values</small>}
-                </span>
-              </label>
-            </li>
+            <button
+              key={algorithm.id}
+              type="button"
+              className="chip"
+              aria-pressed={checked}
+              disabled={!checked && (selected.length >= max || tooLarge)}
+              onClick={() => toggle(algorithm.id)}
+            >
+              {algorithm.name}
+              {tooLarge && <small>max {formatCount(algorithm.max_size)}</small>}
+            </button>
           )
         })}
-      </ul>
-    </>
+      </div>
+    </div>
   )
 }

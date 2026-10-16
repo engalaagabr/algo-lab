@@ -1,35 +1,17 @@
-/* Charts and benchmark page furniture; colours come from theme tokens. */
+/* Charts and section furniture; colours come from the mode tokens in app.css. */
 .app {
-  /* Validated per theme (all pairs, CVD and normal vision); slots 2 and 3 also differ by dash. */
-  --series-1: #2a78d6;
-  --series-2: #eb6834;
-  --series-3: #1baf7a;
+  /* Validated against each mode's panel (all pairs, CVD and normal vision); slots 2 and 3 also differ by dash. */
+  --series-1: #1fa383;
+  --series-2: #cf7426;
+  --series-3: #8d6be8;
   --chart-grid: color-mix(in srgb, var(--ink) 12%, transparent);
   --surface-ring: var(--panel);
 }
 
-.app[data-theme='card-sorter'] {
-  --series-1: #d9573c;
-  --series-2: #1f9a78;
-  --series-3: #2f6db5;
-}
-
-.app[data-theme='textbook'] {
-  --series-1: #2a5fa8;
-  --series-2: #b3261e;
-  --series-3: #16927a;
-}
-
-.app[data-theme='terminal-yellow'] {
-  --series-1: #1f5fbf;
-  --series-2: #c2410c;
-  --series-3: #16927a;
-}
-
-.app[data-theme='graphite'] {
-  --series-1: #1fa383;
-  --series-2: #cf7426;
-  --series-3: #8d6be8;
+.app[data-mode='light'] {
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --series-3: #1baf7a;
 }
 
 .series--1 {
@@ -45,49 +27,6 @@
 .series--3 {
   --series: var(--series-3);
   --dash: 2 3;
-}
-
-/* Page furniture */
-.stage__intro h1 {
-  margin: 0 0 4px;
-  font-size: 22px;
-}
-
-.stage__intro p {
-  margin: 0;
-  color: var(--muted);
-  max-width: 70ch;
-  line-height: 1.5;
-}
-
-.setup__label {
-  display: flex;
-  justify-content: space-between;
-}
-
-.setup__label output {
-  color: var(--ink);
-  font-family: var(--font-num);
-}
-
-.setup__hint {
-  margin: 0;
-  font-size: 13px;
-  color: #b3261e;
-}
-
-.app[data-theme='graphite'] .setup__hint {
-  color: #ff9d94;
-}
-
-.setup__algorithms label.is-limited {
-  color: var(--muted);
-}
-
-.setup__algorithms small {
-  display: block;
-  font-size: 11px;
-  color: var(--muted);
 }
 
 .chips {
@@ -474,4 +413,10 @@
   .small-multiples {
     grid-template-columns: minmax(0, 1fr);
   }
+}
+
+.app .chip small {
+  margin-left: 4px;
+  font-size: 11px;
+  opacity: 0.8;
 }

@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react'
 import type { AlgorithmMetadata, OperationMetrics } from '../api/client'
 import type { Replay } from '../replay/engine'
-import { heldOperand, narrate } from '../replay/narrate'
+import { formatCount } from '../shared/lab'
 import { useWidth } from '../shared/useWidth'
 
 interface LaneProps {
@@ -11,17 +11,23 @@ interface LaneProps {
   cursor: number
   /** Animation length in ms; 0 disables movement when playback is too fast to follow. */
   duration: number
+  /** Finishing position in the race; lanes with equal trace lengths share a place. */
+  place: number
 }
 
 /** Minimum slot width in px before per-bar labels would collide. */
-const VALUE_LABEL_MIN = 26
-const INDEX_LABEL_MIN = 18
+const VALUE_LABEL_MIN = 22
+const INDEX_LABEL_MIN = 16
 
-export function Lane({ algorithm, replay, metrics, cursor, duration }: LaneProps) {
+const ordinal = (place: number) => {
+  const suffix = place % 100 >= 11 && place % 100 <= 13 ? 'th' : ['th', 'st', 'nd', 'rd'][place % 10] ?? 'th'
+  return `${place}${suffix}`
+}
+
+export function Lane({ algorithm, replay, metrics, cursor, duration, place }: LaneProps) {
   const [stageRef, stageWidth] = useWidth<HTMLDivElement>()
   const position = Math.min(cursor, replay.length)
   const bars = replay.barsAt(position)
-  const before = replay.barsAt(position - 1).map((bar) => bar.value)
   const done = position >= replay.length && position > 0
   // Once a lane has finished, its last event is history, not the current step.
   const event = done ? null : replay.eventAt(position)
@@ -35,24 +41,24 @@ export function Lane({ algorithm, replay, metrics, cursor, duration }: LaneProps
   const slot = stageWidth / Math.max(1, bars.length)
   const showValues = slot >= VALUE_LABEL_MIN
   const showIndices = slot >= INDEX_LABEL_MIN
-
   const active = new Set(event?.indices ?? [])
-  const heldValue = heldOperand(event, before)
-  const narration = done
-    ? `Sorted after ${replay.length} steps.`
-    : narrate(event, before)
+  const progress = replay.length ? (position / replay.length) * 100 : 100
 
   return (
-    <section className={`lane${done ? ' lane--done' : ''}`}>
+    <article className={`lane${done ? ' lane--done' : ''}${done && place === 1 ? ' lane--first' : ''}`}>
       <header className="lane__head">
-        <h2>{algorithm.name}</h2>
-        <span className="lane__complexity">
-          avg {algorithm.complexity.average} · worst {algorithm.complexity.worst}
-        </span>
-        <span className="lane__status">
-          {done ? 'Sorted' : `step ${position} / ${replay.length}`}
-        </span>
+        <h3>{algorithm.name}</h3>
+        {done ? (
+          <span className="lane__place">{ordinal(place)}</span>
+        ) : (
+          <span className="lane__status">
+            {formatCount(position)} / {formatCount(replay.length)}
+          </span>
+        )}
       </header>
+      <div className="lane__progress" aria-hidden="true">
+        <span style={{ width: `${progress}%` }} />
+      </div>
 
       <div
         ref={stageRef}
@@ -86,36 +92,57 @@ export function Lane({ algorithm, replay, metrics, cursor, duration }: LaneProps
         </div>
       )}
 
-      <p className="lane__narration" aria-live="polite">
-        {event && <span className={`tag tag--${event.kind}`}>{event.kind}</span>}
-        <span className="lane__sentence">{narration}</span>
-        {heldValue !== null && <span className="lane__held">held value {heldValue}</span>}
+      <p className="lane__op">
+        {event ? (
+          <>
+            <span className={`tag tag--${event.kind}`}>{event.kind}</span>
+            {event.indices.map((index) => `[${index}]`).join(event.kind === 'swap' ? ' ↔ ' : ' · ')}
+          </>
+        ) : done ? (
+          `Sorted in ${formatCount(replay.length)} steps`
+        ) : (
+          'Ready'
+        )}
       </p>
 
-      <dl className="lane__metrics">
+      <dl className="lane__specs">
         <div>
           <dt>Comparisons</dt>
           <dd>
-            {counts.compare} <small>/ {metrics.comparisons}</small>
+            {formatCount(counts.compare)} <small>/ {formatCount(metrics.comparisons)}</small>
           </dd>
         </div>
         <div>
           <dt>Swaps</dt>
           <dd>
-            {counts.swap} <small>/ {metrics.swaps}</small>
+            {formatCount(counts.swap)} <small>/ {formatCount(metrics.swaps)}</small>
           </dd>
         </div>
         <div>
           <dt>Array writes</dt>
           <dd>
-            {counts.write + counts.swap * 2} <small>/ {metrics.array_writes}</small>
+            {formatCount(counts.write + counts.swap * 2)} <small>/ {formatCount(metrics.array_writes)}</small>
           </dd>
         </div>
         <div>
-          <dt>Auxiliary writes</dt>
-          <dd>{metrics.auxiliary_writes}</dd>
+          <dt>Average</dt>
+          <dd>{algorithm.complexity.average}</dd>
+        </div>
+        <div>
+          <dt>Worst</dt>
+          <dd>{algorithm.complexity.worst}</dd>
+        </div>
+        <div>
+          <dt>Space</dt>
+          <dd>{algorithm.complexity.auxiliary_space}</dd>
         </div>
       </dl>
-    </section>
+      <p className="lane__traits">
+        <span>best {algorithm.complexity.best}</span>
+        <span>{algorithm.stable ? 'stable' : 'not stable'}</span>
+        <span>{algorithm.in_place ? 'in place' : 'extra memory'}</span>
+        <span>aux writes {formatCount(metrics.auxiliary_writes)}</span>
+      </p>
+    </article>
   )
 }

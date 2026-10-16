@@ -3,17 +3,20 @@
 The web client for AlgoLab: Vite, React, and TypeScript. It talks to the backend only over
 HTTP and never imports backend code.
 
-## Pages
+## Page
 
-- **Visualize** (`#/visualize`): replays sort traces for up to three algorithms side by side,
-  with a sentence explaining each step. Space plays or pauses, the arrow keys step, R resets,
-  and End jumps to the last step.
-- **Benchmark** (`#/benchmark`): times algorithms on one generated dataset and compares the
-  median time or the exact operation counts.
-- **Suite** (`#/suite`): compares how work grows across input sizes and patterns.
+The client is a single page with three sections:
 
-The **Design** selector switches between candidate visual directions; `?theme=<id>` in the
-URL opens a specific one.
+- **Race**: replays sort traces for up to ten algorithms side by side on the same array. Every
+  lane advances one operation per step, so the algorithm with the fewest operations finishes
+  first. Compares, swaps, and writes each have their own trace colour, and the operation counts
+  and complexity are listed under each chart. Space plays or pauses, the arrow keys step, R
+  resets, and End jumps to the last step.
+- **Benchmark**: times algorithms on one generated dataset and compares the median time or the
+  exact operation counts.
+- **Suite**: compares how work grows across input sizes and patterns.
+
+The design is Graphite, in dark and light modes; the top bar switches between them.
 
 ## Run locally
 
@@ -48,11 +51,11 @@ ALGOLAB_API_URL=http://127.0.0.1:9000 npm run dev
 | Path | Contents |
 | --- | --- |
 | `src/api/` | Generated schema types and the typed client |
-| `src/replay/` | Trace replay engine and step narration, with tests |
-| `src/visualizer/` | Visualize page: lanes, playback, and transport controls |
-| `src/benchmark/`, `src/suite/` | Benchmark and suite pages |
+| `src/replay/` | Trace replay engine, with tests |
+| `src/visualizer/` | Race section: lanes, playback, and transport controls |
+| `src/benchmark/`, `src/suite/` | Benchmark and suite sections |
 | `src/charts/` | Bar and line charts |
-| `src/shared/` | Shared controls, formatting, base styles, and design themes |
+| `src/shared/` | Shared controls, formatting, styles, and colour mode |
 
 ## API types
 

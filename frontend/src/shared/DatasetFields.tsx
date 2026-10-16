@@ -15,7 +15,7 @@ export function DatasetFields({ value, onChange, maxSize, sizeControl }: Dataset
   return (
     <>
       <label>
-        <span className="setup__label">
+        <span className="controls__label">
           Size {sizeControl === 'slider' && <output>{value.size}</output>}
         </span>
         {sizeControl === 'slider' ? (
@@ -30,7 +30,7 @@ export function DatasetFields({ value, onChange, maxSize, sizeControl }: Dataset
           />
         )}
       </label>
-      <div className="setup__row">
+      <div className="controls__row">
         <label>
           Min
           <input type="number" value={value.minimum} onChange={(event) => set('minimum', Number(event.target.value))} />

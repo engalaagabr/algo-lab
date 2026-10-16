@@ -1,65 +1,69 @@
 /*
- * Structure shared by every design direction. Colours, fonts and bar materials come from the
- * tokens below; each theme in themes.css overrides tokens and a few signature rules.
+ * Graphite: a quiet workbench with hairline seams where colour is reserved for state. Dark and
+ * light modes redefine the same tokens; every layout rule below is shared.
  */
 .app {
-  --ground: #f3f4f6;
-  --panel: #ffffff;
-  --ink: #16181d;
-  --muted: #5d6470;
-  --line: #d7dbe1;
-  --topbar-bg: #ffffff;
-  --topbar-ink: #16181d;
-  --topbar-muted: #5d6470;
-  --accent: #16181d;
-  --accent-ink: #ffffff;
-  --bar-fill: #9aa3b0;
-  --bar-done: #2f8f5b;
-  --compare: #e0a100;
+  --ground: #16181d;
+  --panel: #1c1f25;
+  --raised: #23272f;
+  --line: #2e323b;
+  --ink: #e6e6e6;
+  --muted: #8a8f99;
+  --accent: #7fd1b9;
+  --accent-ink: #16181d;
+  --bar-fill: #4a505c;
+  --bar-done: #7fd1b9;
+  /* Tracing colours: one per event kind, none shared with the sorted state. */
+  --compare: #f5c542;
   --compare-ink: #16181d;
-  --compare-fill: var(--compare);
-  --swap: #2f6db5;
-  --swap-ink: #ffffff;
-  --swap-fill: var(--swap);
-  --write: #2f8f5b;
-  --write-ink: #ffffff;
-  --write-fill: var(--write);
-  --op-outline: var(--ink);
-  --font-ui: system-ui, sans-serif;
-  --font-num: ui-monospace, monospace;
-  --font-narration: var(--font-ui);
-  --radius: 0px;
+  --swap: #ff6b81;
+  --swap-ink: #16181d;
+  --write: #6ea8ff;
+  --write-ink: #16181d;
+  --op-outline: #e6e6e6;
+  --error-line: #ff8a80;
+  --error-bg: #3a1d1d;
+  --error-ink: #ffd8d4;
+  --font-ui: 'Manrope', system-ui, sans-serif;
+  --font-num: 'JetBrains Mono', ui-monospace, monospace;
+  --radius: 8px;
   --gap: 14px;
+  --topbar-height: 52px;
 
-  display: grid;
-  grid-template-columns: 260px minmax(0, 1fr);
-  grid-template-rows: auto auto 1fr;
-  grid-template-areas:
-    'top top'
-    'error error'
-    'setup stage';
   min-height: 100vh;
   background: var(--ground);
   color: var(--ink);
   font-family: var(--font-ui);
+  color-scheme: dark;
+}
+
+.app[data-mode='light'] {
+  --ground: #f3f4f6;
+  --panel: #ffffff;
+  --raised: #f7f8fa;
+  --line: #dcdfe5;
+  --ink: #16181d;
+  --muted: #5d6470;
+  --accent: #0f7d63;
+  --accent-ink: #ffffff;
+  --bar-fill: #b4bac5;
+  --bar-done: #1f9a78;
+  --compare: #e0a800;
+  --compare-ink: #16181d;
+  --swap: #d6336c;
+  --swap-ink: #ffffff;
+  --write: #2f6db5;
+  --write-ink: #ffffff;
+  --op-outline: #16181d;
+  --error-line: #b3261e;
+  --error-bg: #fdecea;
+  --error-ink: #5c1410;
+
+  color-scheme: light;
 }
 
 body {
   margin: 0;
-}
-
-/* Each page contributes the setup rail and stage straight into the app grid. */
-.page {
-  display: contents;
-}
-
-.page[hidden] {
-  display: none;
-}
-
-.app__error {
-  grid-area: error;
-  margin: 12px 20px 0;
 }
 
 .app button,
@@ -70,17 +74,22 @@ body {
 }
 
 .app button {
-  border: 1px solid var(--ink);
+  border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: var(--panel);
+  background: var(--raised);
   padding: 6px 12px;
   cursor: pointer;
+}
+
+.app button:hover:not(:disabled) {
+  border-color: var(--muted);
 }
 
 .app button.primary {
   background: var(--accent);
   border-color: var(--accent);
   color: var(--accent-ink);
+  font-weight: 600;
 }
 
 .app button:disabled {
@@ -89,19 +98,22 @@ body {
 }
 
 .app :focus-visible {
-  outline: 3px solid var(--swap);
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
 /* Top bar */
 .topbar {
-  grid-area: top;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  box-sizing: border-box;
+  height: var(--topbar-height);
   display: flex;
   align-items: center;
-  gap: 28px;
-  padding: 10px 20px;
-  background: var(--topbar-bg);
-  color: var(--topbar-ink);
+  gap: 16px;
+  padding: 0 24px;
+  background: var(--ground);
   border-bottom: 1px solid var(--line);
 }
 
@@ -110,144 +122,230 @@ body {
   font-size: 18px;
 }
 
-.topbar__nav {
-  display: flex;
-  gap: 4px;
-}
-
-.topbar__nav a {
-  padding: 6px 10px;
-  font-size: 14px;
-  color: var(--topbar-muted);
-  border-radius: var(--radius);
-}
-
-.topbar__nav a[aria-current='page'] {
-  color: var(--topbar-ink);
-  font-weight: 600;
-  box-shadow: inset 0 -2px 0 currentColor;
-}
-
-.topbar__nav a {
-  text-decoration: none;
-}
-
-.topbar__theme {
+.app .topbar__mode {
   margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 8px;
   font-size: 13px;
-  color: var(--topbar-muted);
 }
 
-.topbar__theme select {
-  background: var(--panel);
-  color: var(--ink);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 4px 6px;
-}
-
-/* Setup rail */
-.setup {
-  grid-area: setup;
-  background: var(--panel);
-  border-right: 1px solid var(--line);
-  padding: 16px;
+/* One page: the race, then the benchmark, then the suite. */
+.page {
+  box-sizing: border-box;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 24px 24px 64px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 48px;
 }
 
-.setup h2 {
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin: 8px 0 0;
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  min-width: 0;
 }
 
-.setup h2 small {
-  text-transform: none;
+.section__head h2 {
+  margin: 0 0 4px;
+  font-size: 22px;
+}
+
+.section__head p {
+  margin: 0;
   color: var(--muted);
-  letter-spacing: 0;
-  font-weight: 400;
+  max-width: 75ch;
+  line-height: 1.5;
 }
 
-.setup label {
+.section + .section {
+  border-top: 1px solid var(--line);
+  padding-top: 32px;
+}
+
+/* Controls panel: fields flow in a row and wrap; wide rows span the panel. */
+.controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  align-items: end;
+  gap: 12px 16px;
+  padding: 16px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.controls__wide {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.controls__heading {
+  font-size: 12px;
+  color: var(--muted);
+  font-variant: small-caps;
+  text-transform: lowercase;
+  letter-spacing: 0.1em;
+}
+
+.controls__heading small {
+  letter-spacing: 0;
+  font-variant: normal;
+}
+
+.controls label {
   display: flex;
   flex-direction: column;
   gap: 4px;
   font-size: 13px;
   color: var(--muted);
+  min-width: 0;
 }
 
-.setup input,
-.setup select {
+.controls input,
+.controls select {
+  box-sizing: border-box;
+  width: 100%;
   min-width: 0;
-  padding: 5px 6px;
+  padding: 6px 8px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: var(--panel);
+  background: var(--raised);
   color: var(--ink);
 }
 
-.setup__row {
+.controls input[type='range'] {
+  padding: 0;
+  border: 0;
+  background: none;
+  accent-color: var(--accent);
+}
+
+.controls__row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 8px;
 }
 
-.setup__row input {
-  width: 100%;
-  box-sizing: border-box;
+.controls__label {
+  display: flex;
+  justify-content: space-between;
 }
 
-.setup__values {
+.controls__label output {
+  color: var(--ink);
+  font-family: var(--font-num);
+}
+
+.controls__values {
   font: 12px var(--font-num);
   color: var(--muted);
   margin: 0;
-  max-height: 72px;
-  overflow: auto;
   overflow-wrap: anywhere;
 }
 
-.setup__algorithms {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.setup__algorithms label {
-  flex-direction: row;
+.controls__actions {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 8px;
-  color: var(--ink);
+}
+
+.controls__actions button {
   font-size: 14px;
-  padding: 3px 0;
 }
 
-/* Stage */
-.stage {
-  grid-area: stage;
-  min-width: 0;
-  padding: 16px 20px 0;
+.controls__actions .primary {
+  margin-left: auto;
+}
+
+.controls__hint {
+  margin: 0;
+  font-size: 13px;
+  color: var(--error-line);
+}
+
+/* Racers: one removable chip per algorithm and the add menu. */
+.racers {
   display: flex;
-  flex-direction: column;
-  gap: var(--gap);
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
 }
 
+.racer {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 4px 3px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--raised);
+  font-size: 14px;
+}
+
+.app .racer button {
+  border: 0;
+  background: none;
+  padding: 0 6px;
+  font-size: 16px;
+  line-height: 1;
+  color: var(--muted);
+}
+
+.app .racer button:hover {
+  color: var(--ink);
+}
+
+.controls .racers__add {
+  width: auto;
+  font-size: 14px;
+  border-style: dashed;
+  border-radius: 999px;
+  padding: 5px 12px;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+/* Trace legend */
 .legend {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 6px 8px;
+  gap: 6px 18px;
   font-size: 13px;
   color: var(--muted);
 }
 
-.legend .tag:not(:first-child) {
-  margin-left: 10px;
+.legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend i {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+.legend__compare {
+  background: var(--compare);
+}
+
+.legend__swap {
+  background: var(--swap);
+}
+
+.legend__write {
+  background: var(--write);
+}
+
+.legend__done {
+  background: var(--bar-done);
 }
 
 .tag {
@@ -256,7 +354,7 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.04em;
   padding: 2px 6px;
-  border-radius: var(--radius);
+  border-radius: 4px;
 }
 
 .tag--compare {
@@ -274,8 +372,59 @@ body {
   color: var(--write-ink);
 }
 
-/* Lane */
+/* Transport sticks under the top bar only while the race is on screen. */
+.transport {
+  position: sticky;
+  top: var(--topbar-height);
+  z-index: 3;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.transport__scrub {
+  flex: 1 1 160px;
+  min-width: 120px;
+  accent-color: var(--accent);
+}
+
+.transport__pos {
+  font: 13px var(--font-num);
+  min-width: 80px;
+  text-align: right;
+}
+
+.transport__speed {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.transport__speed select {
+  background: var(--raised);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 4px 6px;
+}
+
+/* Race: small charts side by side. */
+.race {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: var(--gap);
+}
+
 .lane {
+  display: flex;
+  flex-direction: column;
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -283,47 +432,73 @@ body {
   min-width: 0;
 }
 
+.lane--first {
+  border-color: var(--bar-done);
+  box-shadow: inset 0 3px 0 var(--bar-done);
+}
+
 .lane__head {
   display: flex;
-  flex-wrap: wrap;
   align-items: baseline;
-  gap: 4px 12px;
+  gap: 8px;
 }
 
-.lane__head h2 {
+.lane__head h3 {
   margin: 0;
-  font-size: 18px;
-}
-
-.lane__complexity {
-  color: var(--muted);
-  font-size: 13px;
-  font-family: var(--font-num);
+  font-size: 16px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .lane__status {
   margin-left: auto;
-  font: 13px var(--font-num);
+  font: 12px var(--font-num);
+  color: var(--muted);
   white-space: nowrap;
 }
 
-.lane--done .lane__status {
+.lane__place {
+  margin-left: auto;
+  font: 700 12px var(--font-num);
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--bar-done);
   color: var(--bar-done);
-  font-weight: 700;
+  white-space: nowrap;
+}
+
+.lane--first .lane__place {
+  background: var(--bar-done);
+  color: var(--accent-ink);
+}
+
+.lane__progress {
+  height: 3px;
+  margin-top: 8px;
+  background: var(--line);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.lane__progress span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
 }
 
 .lane__stage {
   position: relative;
-  height: 220px;
+  height: 170px;
   margin: 12px 0 0;
 }
 
 .lane__stage--values {
-  margin-top: 26px;
+  margin-top: 22px;
 }
 
 .lane__stage--values.lane__stage--negative {
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 .lane__zero {
@@ -331,7 +506,7 @@ body {
   left: 0;
   right: 0;
   top: var(--zero);
-  border-top: 1px solid var(--ink);
+  border-top: 1px solid var(--line);
 }
 
 .bar {
@@ -346,11 +521,11 @@ body {
   position: absolute;
   inset: 0 12%;
   background: var(--bar-fill);
-  border-radius: var(--radius) var(--radius) 0 0;
+  border-radius: 3px 3px 0 0;
 }
 
 .bar--neg .bar__fill {
-  border-radius: 0 0 var(--radius) var(--radius);
+  border-radius: 0 0 3px 3px;
 }
 
 .lane--done .bar__fill {
@@ -359,18 +534,18 @@ body {
 
 /* Kinds differ by outline style as well as colour so they survive a washed-out projector. */
 .bar--compare .bar__fill {
-  background: var(--compare-fill);
-  outline: 3px dashed var(--op-outline);
+  background: var(--compare);
+  outline: 2px dashed var(--op-outline);
 }
 
 .bar--swap .bar__fill {
-  background: var(--swap-fill);
-  outline: 3px solid var(--op-outline);
+  background: var(--swap);
+  outline: 2px solid var(--op-outline);
 }
 
 .bar--write .bar__fill {
-  background: var(--write-fill);
-  outline: 3px dotted var(--op-outline);
+  background: var(--write);
+  outline: 2px dotted var(--op-outline);
 }
 
 .bar__value {
@@ -380,8 +555,16 @@ body {
   bottom: 100%;
   margin-bottom: 3px;
   text-align: center;
-  font: 11px var(--font-num);
+  font: 10px var(--font-num);
+  color: var(--muted);
   white-space: nowrap;
+}
+
+.bar--compare .bar__value,
+.bar--swap .bar__value,
+.bar--write .bar__value {
+  color: var(--ink);
+  font-weight: 700;
 }
 
 .bar--neg .bar__value {
@@ -407,133 +590,86 @@ body {
   font-weight: 700;
 }
 
-.lane__narration {
+.lane__op {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px 10px;
-  margin: 14px 0 8px;
-  font-family: var(--font-narration);
-  font-size: 16px;
-  min-height: 26px;
-}
-
-.lane__held {
-  font: 12px var(--font-num);
-  border: 1px dashed var(--compare);
-  padding: 1px 6px;
-  border-radius: var(--radius);
-}
-
-.lane__metrics {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 28px;
-  margin: 0;
-  font-size: 13px;
-}
-
-.lane__metrics dt {
-  color: var(--muted);
-}
-
-.lane__metrics dd {
-  margin: 0;
-  font: 600 16px var(--font-num);
-}
-
-.lane__metrics small {
-  color: var(--muted);
-  font-weight: 400;
-}
-
-/* Transport sticks to the bottom of the stage so it never covers the setup rail. */
-.transport {
-  position: sticky;
-  bottom: 0;
-  margin: 0 -20px;
-  display: flex;
-  flex-wrap: wrap;
   align-items: center;
   gap: 8px;
-  padding: 12px 20px;
-  background: var(--panel);
+  min-height: 22px;
+  margin: 10px 0 0;
+  font: 12px var(--font-num);
+  color: var(--muted);
+}
+
+/* Specs under each chart */
+.lane__specs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px 12px;
+  margin: 12px 0 0;
+  padding-top: 12px;
   border-top: 1px solid var(--line);
 }
 
-.transport__scrub {
-  flex: 1 1 160px;
-  min-width: 120px;
-  accent-color: var(--accent);
+.lane__specs dt {
+  font-size: 11px;
+  color: var(--muted);
+  font-variant: small-caps;
+  text-transform: lowercase;
+  letter-spacing: 0.08em;
 }
 
-.transport__pos {
-  font: 13px var(--font-num);
-  min-width: 80px;
-  text-align: right;
+.lane__specs dd {
+  margin: 2px 0 0;
+  font: 600 15px var(--font-num);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.transport__speed {
+.lane__specs small {
+  color: var(--muted);
+  font-weight: 400;
+  font-size: 11px;
+}
+
+.lane__traits {
   display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-}
-
-.transport__speed select {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin: 10px 0 0;
+  font: 11px var(--font-num);
+  color: var(--muted);
 }
 
 .error {
-  border: 2px solid #b3261e;
-  background: #fdecea;
-  color: #5c1410;
+  border: 1px solid var(--error-line);
+  background: var(--error-bg);
+  color: var(--error-ink);
+  border-radius: var(--radius);
   padding: 10px 12px;
   margin: 0;
 }
 
 .empty {
   color: var(--muted);
+  margin: 0;
 }
 
-/* Narrow screens: setup moves above the stage. */
-@media (max-width: 900px) {
-  .app {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-areas:
-      'top'
-      'error'
-      'setup'
-      'stage';
-  }
-
-  .setup {
-    border-right: 0;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .setup__algorithms {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  }
-
+@media (max-width: 700px) {
   .topbar {
-    flex-wrap: wrap;
-    gap: 8px 16px;
+    padding: 0 16px;
   }
 
-  .stage {
-    padding: 12px 12px 0;
+  .page {
+    padding: 16px 16px 48px;
+    gap: 36px;
   }
 
-  .transport {
-    margin: 0 -12px;
-    padding: 10px 12px;
+  .controls {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .lane__stage {
-    height: 160px;
+    height: 140px;
   }
 }

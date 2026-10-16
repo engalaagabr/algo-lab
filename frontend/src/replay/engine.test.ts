@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { SortEvent, SortExperiment } from '../api/client'
 import { Replay } from './engine'
-import { narrate } from './narrate'
 import recorded from './__fixtures__/sort-trace.json'
 
 // Real /sort trace for all ten algorithms on 14 negative and duplicate values. Sequence
@@ -57,28 +56,5 @@ describe('Replay', () => {
     const replay = new Replay([2, 1], [{ sequence: 0, kind: 'swap', indices: [0, 1], values: [1, 2] }])
     expect(values(replay, -5)).toEqual([2, 1])
     expect(values(replay, 99)).toEqual([1, 2])
-  })
-})
-
-describe('narrate', () => {
-  it('describes a held insertion key compared with one array index', () => {
-    // The documented insertion sort trace for [2, 1].
-    const event: SortEvent = { sequence: 0, kind: 'compare', indices: [0], values: [2, 1] }
-    expect(narrate(event, [2, 1])).toBe(
-      'Compare 2 at index 0 with the held value 1: 2 is larger.',
-    )
-  })
-
-  it('describes swaps and writes with the values they change', () => {
-    expect(narrate({ sequence: 0, kind: 'swap', indices: [0, 1], values: [1, 5] }, [5, 1])).toBe(
-      'Swap indices 0 and 1: 5 and 1 trade places.',
-    )
-    expect(narrate({ sequence: 1, kind: 'write', indices: [1], values: [2] }, [2, 1])).toBe(
-      'Write 2 into index 1, replacing 1.',
-    )
-  })
-
-  it('prompts before the first event', () => {
-    expect(narrate(null, [])).toBe('Ready. Press play or step forward to start.')
   })
 })

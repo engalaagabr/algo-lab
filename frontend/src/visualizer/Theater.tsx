@@ -7,11 +7,10 @@ import { SPEEDS, usePlayback } from './usePlayback'
 interface TheaterProps {
   experiment: SortExperiment
   algorithms: AlgorithmMetadata[]
-  active: boolean
 }
 
-/** Lanes for one experiment plus the shared transport; remount it for each new experiment. */
-export function Theater({ experiment, algorithms, active }: TheaterProps) {
+/** Race lanes for one experiment plus the shared transport; remount it for each new experiment. */
+export function Theater({ experiment, algorithms }: TheaterProps) {
   const lanes = useMemo(
     () =>
       experiment.results.map((result) => ({
@@ -22,16 +21,19 @@ export function Theater({ experiment, algorithms, active }: TheaterProps) {
     [experiment, algorithms],
   )
   const longest = Math.max(0, ...lanes.map((lane) => lane.replay.length))
+  // Every lane advances one event per step, so a shorter trace finishes earlier.
+  const placeOf = (length: number) => 1 + lanes.filter((lane) => lane.replay.length < length).length
   const playback = usePlayback(longest)
   const interval = 1000 / playback.speed
   const duration = interval < 40 ? 0 : Math.min(320, interval * 0.8)
 
   useEffect(() => {
-    if (!active) return
     const onKey = (event: KeyboardEvent) => {
       const target = event.target
       if (target instanceof HTMLInputElement && target.type !== 'range') return
       if (target instanceof HTMLSelectElement) return
+      // A focused button already answers Space with its own click.
+      if (target instanceof HTMLButtonElement && event.key === ' ') return
       if (event.key === ' ') {
         event.preventDefault()
         playback.togglePlay()
@@ -46,23 +48,10 @@ export function Theater({ experiment, algorithms, active }: TheaterProps) {
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [active, playback, longest])
+  }, [playback, longest])
 
   return (
     <>
-      {lanes.map(({ result, algorithm, replay }) =>
-        algorithm ? (
-          <Lane
-            key={result.algorithm_id}
-            algorithm={algorithm}
-            replay={replay}
-            metrics={result.metrics}
-            cursor={playback.cursor}
-            duration={duration}
-          />
-        ) : null,
-      )}
-
       <div className="transport">
         <button type="button" onClick={playback.reset} title="Reset (R)">
           Reset
@@ -101,6 +90,21 @@ export function Theater({ experiment, algorithms, active }: TheaterProps) {
             ))}
           </select>
         </label>
+      </div>
+      <div className="race">
+        {lanes.map(({ result, algorithm, replay }) =>
+          algorithm ? (
+            <Lane
+              key={result.algorithm_id}
+              algorithm={algorithm}
+              replay={replay}
+              metrics={result.metrics}
+              cursor={playback.cursor}
+              duration={duration}
+              place={placeOf(replay.length)}
+            />
+          ) : null,
+        )}
       </div>
     </>
   )
