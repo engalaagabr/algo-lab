@@ -178,6 +178,20 @@ body {
 .topbar__mark-node--mint { fill: var(--bar-done); }
 .topbar__mark-node--rose { fill: var(--swap); }
 
+@media (prefers-reduced-motion: no-preference) {
+  .topbar__mark-node {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: node-flow 2.4s ease-in-out infinite;
+  }
+
+  .topbar__mark-node:nth-of-type(1) { animation-delay: 0s; }
+  .topbar__mark-node:nth-of-type(2) { animation-delay: 0.35s; }
+  .topbar__mark-node:nth-of-type(3) { animation-delay: 0.7s; }
+  .topbar__mark-node:nth-of-type(4) { animation-delay: 1.05s; }
+  .topbar__mark-node:nth-of-type(5) { animation-delay: 1.4s; }
+}
+
 .topbar__brand {
   font-weight: 750;
   font-size: 18px;
@@ -856,6 +870,17 @@ body {
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+@keyframes node-flow {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  12%, 28% {
+    transform: scale(1.35);
+    opacity: 1;
   }
 }
 
