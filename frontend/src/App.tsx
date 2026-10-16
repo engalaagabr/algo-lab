@@ -38,7 +38,7 @@ export default function App() {
             <i />
           </span>
           <span className="topbar__brand">Algo<span>Lab</span></span>
-          <span className="topbar__tagline">SORTING LAB</span>
+          <span className="topbar__tagline">ALGORITHM LAB</span>
         </div>
         <nav className="topbar__tabs" aria-label="Algorithm categories" role="tablist">
           <button type="button" className="topbar__tab topbar__tab--active" role="tab" aria-selected="true" aria-controls="sorting-panel">
