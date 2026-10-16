@@ -1,4 +1,5 @@
 import { ApiError } from '../api/client'
+import type { Messages } from '../i18n/en'
 
 /** The page starts with these selected in every section. */
 export const DEFAULT_ALGORITHMS = ['bubble_sort', 'insertion_sort', 'quick_sort']
@@ -14,22 +15,25 @@ export interface DatasetSettings {
   seed: string
 }
 
-export const DISTRIBUTIONS: { value: Distribution; label: string }[] = [
-  { value: 'random', label: 'Random' },
-  { value: 'sorted', label: 'Sorted' },
-  { value: 'reversed', label: 'Reversed' },
-  { value: 'nearly_sorted', label: 'Nearly sorted' },
-  { value: 'few_unique', label: 'Few unique' },
-]
+/** Each pattern with the message key of its label. */
+export const DISTRIBUTIONS = [
+  { value: 'random', label: 'random' },
+  { value: 'sorted', label: 'sorted' },
+  { value: 'reversed', label: 'reversed' },
+  { value: 'nearly_sorted', label: 'nearlySorted' },
+  { value: 'few_unique', label: 'fewUnique' },
+] as const satisfies readonly { value: Distribution; label: keyof Messages }[]
 
-export const distributionLabel = (value: string) =>
-  DISTRIBUTIONS.find((item) => item.value === value)?.label ?? value
+export const distributionLabel = (text: Messages, value: string) => {
+  const found = DISTRIBUTIONS.find((item) => item.value === value)
+  return found ? text[found.label] : value
+}
 
-/** A user-facing sentence for a failed request. */
-export function errorMessage(cause: unknown): string {
+/** A user-facing sentence for a failed request; server messages arrive in English. */
+export function errorMessage(cause: unknown, text: Messages): string {
   if (cause instanceof ApiError) {
-    if (cause.retryable) return 'The server is busy with other experiments. Try again in a moment.'
-    if (cause.code === 'network_error') return 'The API could not be reached. Is the backend running?'
+    if (cause.retryable) return text.apiBusy
+    if (cause.code === 'network_error') return text.apiUnreachable
     return cause.message
   }
   return String(cause)

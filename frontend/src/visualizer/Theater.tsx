@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from 'react'
 import type { AlgorithmMetadata, SortExperiment } from '../api/client'
+import { useText } from '../i18n/language'
 import { Replay } from '../replay/engine'
 import { Lane } from './Lane'
 import { SPEEDS, usePlayback } from './usePlayback'
@@ -20,6 +21,7 @@ export function Theater({ experiment, algorithms }: TheaterProps) {
       })),
     [experiment, algorithms],
   )
+  const text = useText()
   const longest = Math.max(0, ...lanes.map((lane) => lane.replay.length))
   // Every lane advances one event per step, so a shorter trace finishes earlier.
   const placeOf = (length: number) => 1 + lanes.filter((lane) => lane.replay.length < length).length
@@ -53,16 +55,16 @@ export function Theater({ experiment, algorithms }: TheaterProps) {
   return (
     <>
       <div className="transport">
-        <button type="button" onClick={playback.reset} title="Reset (R)">
-          Reset
+        <button type="button" onClick={playback.reset} title={text.resetTitle}>
+          {text.reset}
         </button>
-        <button type="button" onClick={playback.stepBack} title="Step back (←)">
+        <button type="button" onClick={playback.stepBack} title={text.stepBack} aria-label={text.stepBack}>
           ◀
         </button>
-        <button type="button" className="primary" onClick={playback.togglePlay} title="Play / pause (Space)">
-          {playback.playing ? 'Pause' : playback.cursor >= longest ? 'Replay' : 'Play'}
+        <button type="button" className="primary" onClick={playback.togglePlay} title={text.playPause}>
+          {playback.playing ? text.pause : playback.cursor >= longest ? text.replay : text.play}
         </button>
-        <button type="button" onClick={playback.stepForward} title="Step forward (→)">
+        <button type="button" onClick={playback.stepForward} title={text.stepForward} aria-label={text.stepForward}>
           ▶
         </button>
         <input
@@ -75,17 +77,17 @@ export function Theater({ experiment, algorithms }: TheaterProps) {
             playback.pause()
             playback.seek(Number(event.target.value))
           }}
-          aria-label="Step"
+          aria-label={text.step}
         />
         <span className="transport__pos">
           {playback.cursor} / {longest}
         </span>
         <label className="transport__speed">
-          Speed
+          {text.speed}
           <select value={playback.speed} onChange={(event) => playback.setSpeed(Number(event.target.value))}>
             {SPEEDS.map((speed) => (
               <option key={speed} value={speed}>
-                {speed} steps/s
+                {text.stepsPerSecond(speed)}
               </option>
             ))}
           </select>

@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react'
 import type { AlgorithmMetadata, OperationMetrics } from '../api/client'
 import type { Replay } from '../replay/engine'
+import { useText } from '../i18n/language'
 import { formatCount } from '../shared/lab'
 import { useWidth } from '../shared/useWidth'
 
@@ -19,12 +20,8 @@ interface LaneProps {
 const VALUE_LABEL_MIN = 22
 const INDEX_LABEL_MIN = 16
 
-const ordinal = (place: number) => {
-  const suffix = place % 100 >= 11 && place % 100 <= 13 ? 'th' : ['th', 'st', 'nd', 'rd'][place % 10] ?? 'th'
-  return `${place}${suffix}`
-}
-
 export function Lane({ algorithm, replay, metrics, cursor, duration, place }: LaneProps) {
+  const text = useText()
   const [stageRef, stageWidth] = useWidth<HTMLDivElement>()
   const position = Math.min(cursor, replay.length)
   const bars = replay.barsAt(position)
@@ -49,7 +46,7 @@ export function Lane({ algorithm, replay, metrics, cursor, duration, place }: La
       <header className="lane__head">
         <h3>{algorithm.name}</h3>
         {done ? (
-          <span className="lane__place">{ordinal(place)}</span>
+          <span className="lane__place">{text.place(place)}</span>
         ) : (
           <span className="lane__status">
             {formatCount(position)} / {formatCount(replay.length)}
@@ -95,53 +92,57 @@ export function Lane({ algorithm, replay, metrics, cursor, duration, place }: La
       <p className="lane__op">
         {event ? (
           <>
-            <span className={`tag tag--${event.kind}`}>{event.kind}</span>
-            {event.indices.map((index) => `[${index}]`).join(event.kind === 'swap' ? ' ↔ ' : ' · ')}
+            <span className={`tag tag--${event.kind}`}>{text[event.kind]}</span>
+            <span dir="ltr">{event.indices.map((index) => `[${index}]`).join(event.kind === 'swap' ? ' ↔ ' : ' · ')}</span>
           </>
         ) : done ? (
-          `Sorted in ${formatCount(replay.length)} steps`
+          text.sortedIn(formatCount(replay.length))
         ) : (
-          'Ready'
+          text.ready
         )}
       </p>
 
       <dl className="lane__specs">
         <div>
-          <dt>Comparisons</dt>
+          <dt>{text.comparisons}</dt>
           <dd>
             {formatCount(counts.compare)} <small>/ {formatCount(metrics.comparisons)}</small>
           </dd>
         </div>
         <div>
-          <dt>Swaps</dt>
+          <dt>{text.swaps}</dt>
           <dd>
             {formatCount(counts.swap)} <small>/ {formatCount(metrics.swaps)}</small>
           </dd>
         </div>
         <div>
-          <dt>Array writes</dt>
+          <dt>{text.arrayWrites}</dt>
           <dd>
             {formatCount(counts.write + counts.swap * 2)} <small>/ {formatCount(metrics.array_writes)}</small>
           </dd>
         </div>
         <div>
-          <dt>Average</dt>
+          <dt>{text.average}</dt>
           <dd>{algorithm.complexity.average}</dd>
         </div>
         <div>
-          <dt>Worst</dt>
+          <dt>{text.worst}</dt>
           <dd>{algorithm.complexity.worst}</dd>
         </div>
         <div>
-          <dt>Space</dt>
+          <dt>{text.space}</dt>
           <dd>{algorithm.complexity.auxiliary_space}</dd>
         </div>
       </dl>
       <p className="lane__traits">
-        <span>best {algorithm.complexity.best}</span>
-        <span>{algorithm.stable ? 'stable' : 'not stable'}</span>
-        <span>{algorithm.in_place ? 'in place' : 'extra memory'}</span>
-        <span>aux writes {formatCount(metrics.auxiliary_writes)}</span>
+        <span>
+          {text.best} <bdi>{algorithm.complexity.best}</bdi>
+        </span>
+        <span>{algorithm.stable ? text.stable : text.notStable}</span>
+        <span>{algorithm.in_place ? text.inPlace : text.extraMemory}</span>
+        <span>
+          {text.auxWrites} {formatCount(metrics.auxiliary_writes)}
+        </span>
       </p>
     </article>
   )

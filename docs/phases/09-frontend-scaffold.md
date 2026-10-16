@@ -30,8 +30,14 @@ The client is one page with three sections:
 The algorithm selection is shared by all three sections, so adding an algorithm to the race
 also adds it to the benchmark and the suite.
 
-The design is Graphite in dark and light modes. The chosen mode is remembered in the browser;
-the first visit follows the system preference.
+The design is Graphite in dark and light modes, using the palette from the team's design file;
+the chart series use the same hues, stepped to pass colour-vision and contrast checks. The
+chosen mode is remembered in the browser; the first visit follows the system preference.
+
+The interface is available in English and Arabic. Arabic switches the page to right-to-left,
+while the race lanes, the step controls, and the charts keep their left-to-right order so index
+0 stays on the left. Algorithm names, complexity notation, and messages from the API stay as
+the API sends them.
 
 Validation: `npm run typecheck`, `npm run lint`, `npm test` (32 tests), and `npm run build`
 pass. The replay tests use a recorded `/sort` trace for all ten algorithms and check that

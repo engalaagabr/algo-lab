@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { api, request, type AlgorithmMetadata, type BenchmarkResult } from '../api/client'
 import { BarChart, type BarRow } from '../charts/BarChart'
 import { compactNumber } from '../charts/scale'
+import { useText } from '../i18n/language'
+import type { Messages } from '../i18n/en'
 import { AlgorithmPicker } from '../shared/AlgorithmPicker'
 import { DatasetFields } from '../shared/DatasetFields'
 import { datasetBody, errorMessage, formatCount, formatDuration, type DatasetSettings } from '../shared/lab'
@@ -11,11 +13,11 @@ const MAX_ALGORITHMS = 10
 
 type Metric = 'time' | 'comparisons' | 'array_writes' | 'swaps'
 
-const METRICS: { id: Metric; label: string }[] = [
-  { id: 'time', label: 'Median time' },
-  { id: 'comparisons', label: 'Comparisons' },
-  { id: 'array_writes', label: 'Array writes' },
-  { id: 'swaps', label: 'Swaps' },
+const METRICS: { id: Metric; label: keyof Messages & string }[] = [
+  { id: 'time', label: 'medianTime' },
+  { id: 'comparisons', label: 'comparisons' },
+  { id: 'array_writes', label: 'arrayWrites' },
+  { id: 'swaps', label: 'swaps' },
 ]
 
 interface BenchmarkSectionProps {
@@ -37,7 +39,7 @@ export function BenchmarkSection({ algorithms, selected, onSelect }: BenchmarkSe
   const [result, setResult] = useState<BenchmarkResult | null>(null)
   const [metric, setMetric] = useState<Metric>('time')
   const [busy, setBusy] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState<unknown>(null)
 
   const run = async () => {
     setBusy(true)
@@ -48,12 +50,14 @@ export function BenchmarkSection({ algorithms, selected, onSelect }: BenchmarkSe
       const body = { values: dataset.values, algorithm_ids: selected, repeats, warmups }
       setResult(await request(api.POST('/api/v1/benchmarks', { body })))
     } catch (cause) {
-      setError(errorMessage(cause))
+      setError(cause)
     } finally {
       setBusy(false)
     }
   }
 
+  const text = useText()
+  const metricLabel = (id: Metric) => text[METRICS.find((entry) => entry.id === id)!.label] as string
   const name = (id: string) => algorithms.find((item) => item.id === id)?.name ?? id
   const tooLarge = selected.filter((id) => (algorithms.find((item) => item.id === id)?.max_size ?? Infinity) < settings.size)
   const fastest = new Set(result?.fastest_algorithm_ids)
@@ -64,18 +68,18 @@ export function BenchmarkSection({ algorithms, selected, onSelect }: BenchmarkSe
       return {
         id: item.algorithm_id,
         label: name(item.algorithm_id),
-        badge: metric === 'time' && fastest.has(item.algorithm_id) ? 'Fastest' : undefined,
+        badge: metric === 'time' && fastest.has(item.algorithm_id) ? text.fastest : undefined,
         value,
         low: metric === 'time' ? item.min_ns : undefined,
         high: metric === 'time' ? item.max_ns : undefined,
         details:
           metric === 'time'
             ? [
-                `Median ${formatDuration(item.median_ns)}`,
-                `Range ${formatDuration(item.min_ns)} – ${formatDuration(item.max_ns)}`,
-                `Samples ${item.samples_ns.map(formatDuration).join(', ')}`,
+                text.medianDetail(formatDuration(item.median_ns)),
+                text.rangeDetail(formatDuration(item.min_ns), formatDuration(item.max_ns)),
+                text.samplesDetail(item.samples_ns.map(formatDuration).join(', ')),
               ]
-            : [`${formatCount(value)} ${METRICS.find((entry) => entry.id === metric)?.label.toLowerCase()}`],
+            : [text.countDetail(formatCount(value), metricLabel(metric))],
       }
     })
     .sort((left, right) => left.value - right.value)
@@ -83,22 +87,19 @@ export function BenchmarkSection({ algorithms, selected, onSelect }: BenchmarkSe
   return (
     <section className="section" aria-labelledby="benchmark-title">
       <header className="section__head">
-        <h2 id="benchmark-title">Benchmark</h2>
-        <p>
-          Every algorithm sorts the same array {repeats} times. Times are measured on the server in Python and
-          describe this machine and this input only; animation speed in the race is not runtime.
-        </p>
+        <h2 id="benchmark-title">{text.benchmarkTitle}</h2>
+        <p>{text.benchmarkIntro(repeats)}</p>
       </header>
 
       <div className="controls">
         <DatasetFields value={settings} onChange={setSettings} maxSize={MAX_DATASET_SIZE} sizeControl="number" />
         <div className="controls__row">
           <label>
-            Repeats
+            {text.repeats}
             <input type="number" min={1} max={15} value={repeats} onChange={(event) => setRepeats(Math.max(1, Math.min(15, Number(event.target.value) || 1)))} />
           </label>
           <label>
-            Warm-ups
+            {text.warmups}
             <input type="number" min={0} max={3} value={warmups} onChange={(event) => setWarmups(Math.max(0, Math.min(3, Number(event.target.value) || 0)))} />
           </label>
         </div>
@@ -111,38 +112,38 @@ export function BenchmarkSection({ algorithms, selected, onSelect }: BenchmarkSe
         />
         <div className="controls__actions">
           {tooLarge.length > 0 && (
-            <p className="controls__hint">Unselect {tooLarge.map(name).join(', ')} or use a smaller size.</p>
+            <p className="controls__hint">{text.unselectOrShrink(tooLarge.map(name).join(', '))}</p>
           )}
           <button type="button" className="primary" disabled={busy || !selected.length || tooLarge.length > 0} onClick={run}>
-            {busy ? 'Measuring…' : 'Run benchmark'}
+            {busy ? text.measuring : text.runBenchmark}
           </button>
         </div>
       </div>
 
-      {error && (
+      {error !== null && (
         <p className="error" role="alert">
-          {error}
+          {errorMessage(error, text)}
         </p>
       )}
-      {!result && !error && <p className="empty">{busy ? 'Measuring…' : 'Choose a dataset and algorithms, then run the benchmark.'}</p>}
+      {!result && error === null && <p className="empty">{busy ? text.measuring : text.chooseBenchmark}</p>}
 
       {result && (
         <>
           <div className="summary">
             <div className="summary__item">
-              <span>Fastest median</span>
+              <span>{text.fastestMedian}</span>
               <strong>{result.fastest_algorithm_ids.map(name).join(', ')}</strong>
             </div>
             <div className="summary__item">
-              <span>Input</span>
+              <span>{text.input}</span>
               <strong>
-                {formatCount(result.input_values.length)} values · seed {settings.seed}
+                {text.valuesAndSeed(formatCount(result.input_values.length), settings.seed)}
               </strong>
             </div>
             <div className="summary__item">
-              <span>Runs</span>
+              <span>{text.runs}</span>
               <strong>
-                {result.repeats} measured + {result.warmups} warm-up
+                {text.measuredRuns(result.repeats, result.warmups)}
               </strong>
             </div>
           </div>
@@ -150,13 +151,12 @@ export function BenchmarkSection({ algorithms, selected, onSelect }: BenchmarkSe
             <p className="notice" role="status">
               <span className="notice__icon" aria-hidden="true">!</span>
               <span>
-                <strong>Too close to call.</strong> The fastest algorithm's timing range overlaps another one's, so
-                the ranking may change on another run.
+                <strong>{text.tooClose}</strong> {text.tooCloseDetail}
               </span>
             </p>
           )}
 
-          <div className="segmented" role="tablist" aria-label="Measure">
+          <div className="segmented" role="tablist" aria-label={text.measure}>
             {METRICS.map((entry) => (
               <button
                 key={entry.id}
@@ -165,34 +165,34 @@ export function BenchmarkSection({ algorithms, selected, onSelect }: BenchmarkSe
                 aria-selected={metric === entry.id}
                 onClick={() => setMetric(entry.id)}
               >
-                {entry.label}
+                {text[entry.label] as string}
               </button>
             ))}
           </div>
 
           <BarChart
-            title={metric === 'time' ? 'Median time per run (lower is faster)' : `${METRICS.find((entry) => entry.id === metric)?.label} for one sort`}
+            title={metric === 'time' ? text.medianPerRun : text.forOneSort(metricLabel(metric))}
             rows={rows}
             format={metric === 'time' ? formatDuration : formatCount}
             tickFormat={metric === 'time' ? formatDuration : compactNumber}
-            caption={metric === 'time' ? 'Bar: median. Line: fastest to slowest sample.' : 'Operation counts are exact and do not vary between runs.'}
+            caption={metric === 'time' ? text.medianCaption : text.countsCaption}
           />
 
           <details className="table-view">
-            <summary>Show all numbers</summary>
+            <summary>{text.showAllNumbers}</summary>
             <div className="table-scroll">
               <table>
                 <thead>
                   <tr>
-                    <th scope="col">Algorithm</th>
-                    <th scope="col">Median</th>
-                    <th scope="col">Min</th>
-                    <th scope="col">Max</th>
-                    <th scope="col">Spread</th>
-                    <th scope="col">Comparisons</th>
-                    <th scope="col">Swaps</th>
-                    <th scope="col">Array writes</th>
-                    <th scope="col">Aux writes</th>
+                    <th scope="col">{text.algorithm}</th>
+                    <th scope="col">{text.median}</th>
+                    <th scope="col">{text.min}</th>
+                    <th scope="col">{text.max}</th>
+                    <th scope="col">{text.spread}</th>
+                    <th scope="col">{text.comparisons}</th>
+                    <th scope="col">{text.swaps}</th>
+                    <th scope="col">{text.arrayWrites}</th>
+                    <th scope="col">{text.auxWrites}</th>
                   </tr>
                 </thead>
                 <tbody>

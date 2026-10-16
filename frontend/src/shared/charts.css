@@ -120,13 +120,13 @@
 .app .segmented button {
   border: 0;
   border-radius: 0;
-  border-right: 1px solid var(--line);
+  border-inline-end: 1px solid var(--line);
   padding: 6px 14px;
   font-size: 14px;
 }
 
 .app .segmented button:last-child {
-  border-right: 0;
+  border-inline-end: 0;
 }
 
 .app .segmented button[aria-selected='true'] {
@@ -156,7 +156,7 @@
 }
 
 .chart__badge {
-  margin-left: 8px;
+  margin-inline-start: 8px;
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
@@ -212,12 +212,18 @@
 }
 
 .chart__tooltip-row b {
-  margin-left: auto;
-  padding-left: 12px;
+  margin-inline-start: auto;
+  padding-inline-start: 12px;
   font-family: var(--font-num);
 }
 
 /* Horizontal bars */
+/* Charts read left to right in every language, like the race lanes. */
+.bar-chart__rows,
+.line-chart__plot {
+  direction: ltr;
+}
+
 .bar-chart__rows {
   display: flex;
   flex-direction: column;
@@ -419,7 +425,7 @@
 .table-view td {
   padding: 6px 10px;
   border-bottom: 1px solid var(--line);
-  text-align: right;
+  text-align: end;
   white-space: nowrap;
 }
 
@@ -429,7 +435,7 @@
 
 .table-view th[scope='row'],
 .table-view thead th:first-child {
-  text-align: left;
+  text-align: start;
 }
 
 @media (max-width: 900px) {
@@ -444,7 +450,7 @@
 }
 
 .app .chip small {
-  margin-left: 4px;
+  margin-inline-start: 4px;
   font-size: 11px;
   opacity: 0.8;
 }

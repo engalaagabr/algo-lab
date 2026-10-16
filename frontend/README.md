@@ -18,7 +18,11 @@ The client is a single page with three sections:
 
 The three sections share one algorithm selection.
 
-The design is Graphite, in dark and light modes; the top bar switches between them.
+The design is Graphite, in dark and light modes, with the colours from the team's design file.
+The top bar switches the mode and the interface language (English or Arabic); Arabic pages
+are laid out right to left, while charts and the array keep index 0 on the left.
+
+Interface text lives in `src/i18n/en.ts` and `src/i18n/ar.ts`, which share the same keys.
 
 ## Run locally
 
@@ -57,6 +61,7 @@ ALGOLAB_API_URL=http://127.0.0.1:9000 npm run dev
 | `src/visualizer/` | Race section: lanes, playback, and transport controls |
 | `src/benchmark/`, `src/suite/` | Benchmark and suite sections |
 | `src/charts/` | Bar and line charts |
+| `src/i18n/` | Interface text in English and Arabic |
 | `src/shared/` | Shared controls, formatting, styles, and colour mode |
 
 ## API types

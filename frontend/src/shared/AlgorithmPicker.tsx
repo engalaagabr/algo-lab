@@ -1,4 +1,5 @@
 import type { AlgorithmMetadata } from '../api/client'
+import { useText } from '../i18n/language'
 import { formatCount } from './lab'
 
 interface AlgorithmPickerProps {
@@ -11,13 +12,14 @@ interface AlgorithmPickerProps {
 }
 
 export function AlgorithmPicker({ algorithms, selected, onChange, max, inputSize = 0 }: AlgorithmPickerProps) {
+  const text = useText()
   const toggle = (id: string) =>
     onChange(selected.includes(id) ? selected.filter((item) => item !== id) : [...selected, id])
 
   return (
     <div className="controls__wide">
       <span className="controls__heading">
-        Algorithms <small>up to {max}</small>
+        {text.algorithms} <small>{text.upTo(max)}</small>
       </span>
       <div className="chips">
         {algorithms.map((algorithm) => {
@@ -33,7 +35,7 @@ export function AlgorithmPicker({ algorithms, selected, onChange, max, inputSize
               onClick={() => toggle(algorithm.id)}
             >
               {algorithm.name}
-              {tooLarge && <small>max {formatCount(algorithm.max_size)}</small>}
+              {tooLarge && <small>{text.maxValues(formatCount(algorithm.max_size))}</small>}
             </button>
           )
         })}

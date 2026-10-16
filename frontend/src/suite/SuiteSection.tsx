@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { api, request, type AlgorithmMetadata, type BenchmarkSuiteResult } from '../api/client'
 import { compactNumber } from '../charts/scale'
 import { LineChart, type LineSeries } from '../charts/LineChart'
+import { useText } from '../i18n/language'
+import type { Messages } from '../i18n/en'
 import { AlgorithmPicker } from '../shared/AlgorithmPicker'
 import { DISTRIBUTIONS, distributionLabel, errorMessage, formatCount, formatDuration, integerText, type Distribution } from '../shared/lab'
 
@@ -13,11 +15,11 @@ const COLOURED_LINES = 3
 
 type Metric = 'time' | 'comparisons' | 'array_writes' | 'swaps'
 
-const METRICS: { id: Metric; label: string }[] = [
-  { id: 'comparisons', label: 'Comparisons' },
-  { id: 'array_writes', label: 'Array writes' },
-  { id: 'swaps', label: 'Swaps' },
-  { id: 'time', label: 'Median time' },
+const METRICS: { id: Metric; label: keyof Messages & string }[] = [
+  { id: 'comparisons', label: 'comparisons' },
+  { id: 'array_writes', label: 'arrayWrites' },
+  { id: 'swaps', label: 'swaps' },
+  { id: 'time', label: 'medianTime' },
 ]
 
 interface SuiteSectionProps {
@@ -39,8 +41,9 @@ export function SuiteSection({ algorithms, selected, onSelect }: SuiteSectionPro
   const [coloured, setColoured] = useState<(string | null)[]>([])
   const [metric, setMetric] = useState<Metric>('comparisons')
   const [busy, setBusy] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState<unknown>(null)
 
+  const text = useText()
   const cases = sizes.length * distributions.length
   const largest = Math.max(0, ...sizes)
   const tooLarge = selected.filter((id) => (algorithms.find((item) => item.id === id)?.max_size ?? Infinity) < largest)
@@ -68,7 +71,7 @@ export function SuiteSection({ algorithms, selected, onSelect }: SuiteSectionPro
       setRanWith({ ids: selected, sizes: sortedSizes, distributions })
       setColoured(selected.slice(0, COLOURED_LINES))
     } catch (cause) {
-      setError(errorMessage(cause))
+      setError(cause)
     } finally {
       setBusy(false)
     }
@@ -107,22 +110,19 @@ export function SuiteSection({ algorithms, selected, onSelect }: SuiteSectionPro
     })) ?? []
   const yMax = Math.max(1, ...panels.flatMap((panel) => panel.series.flatMap((item) => item.values.map((value) => value ?? 0))))
   const format = metric === 'time' ? formatDuration : formatCount
-  const metricLabel = METRICS.find((entry) => entry.id === metric)?.label ?? ''
+  const metricLabel = text[METRICS.find((entry) => entry.id === metric)!.label] as string
 
   return (
     <section className="section" aria-labelledby="suite-title">
       <header className="section__head">
-        <h2 id="suite-title">Suite</h2>
-        <p>
-          How does the work grow with the input? Each pattern gets its own chart, all on the same scale; within a
-          case every algorithm sorts the same array.
-        </p>
+        <h2 id="suite-title">{text.suiteTitle}</h2>
+        <p>{text.suiteIntro}</p>
       </header>
 
       <div className="controls">
         <div className="controls__wide">
           <span className="controls__heading">
-            Sizes <small>{cases} / {MAX_CASES} cases</small>
+            {text.sizes} <small>{text.cases(cases, MAX_CASES)}</small>
           </span>
           <div className="chips">
             {SIZE_PRESETS.map((size) => (
@@ -133,7 +133,7 @@ export function SuiteSection({ algorithms, selected, onSelect }: SuiteSectionPro
           </div>
         </div>
         <div className="controls__wide">
-          <span className="controls__heading">Patterns</span>
+          <span className="controls__heading">{text.patterns}</span>
           <div className="chips">
             {DISTRIBUTIONS.map((item) => (
               <button
@@ -143,35 +143,38 @@ export function SuiteSection({ algorithms, selected, onSelect }: SuiteSectionPro
                 aria-pressed={distributions.includes(item.value)}
                 onClick={() => setDistributions(toggle(distributions, item.value))}
               >
-                {item.label}
+                {text[item.label]}
               </button>
             ))}
           </div>
         </div>
         <div className="controls__row">
           <label>
-            Min
+            {text.min}
             <input type="number" value={minimum} onChange={(event) => setMinimum(Number(event.target.value))} />
           </label>
           <label>
-            Max
+            {text.max}
             <input type="number" value={maximum} onChange={(event) => setMaximum(Number(event.target.value))} />
           </label>
         </div>
         <label>
-          Seed
-          <input value={seed} placeholder="random" inputMode="numeric" onChange={(event) => setSeed(integerText(event.target.value, false))} />
+          {text.seed}
+          <input value={seed} placeholder={text.seedPlaceholder} inputMode="numeric" onChange={(event) => setSeed(integerText(event.target.value, false))} />
         </label>
         <label>
-          Repeats
+          {text.repeats}
           <input type="number" min={1} max={15} value={repeats} onChange={(event) => setRepeats(Math.max(1, Math.min(15, Number(event.target.value) || 1)))} />
         </label>
         <AlgorithmPicker algorithms={algorithms} selected={selected} onChange={onSelect} max={MAX_ALGORITHMS} inputSize={largest} />
         <div className="controls__actions">
-          {cases > MAX_CASES && <p className="controls__hint">Pick at most {MAX_CASES} size × pattern combinations.</p>}
+          {cases > MAX_CASES && <p className="controls__hint">{text.tooManyCases(MAX_CASES)}</p>}
           {tooLarge.length > 0 && (
             <p className="controls__hint">
-              {tooLarge.map(name).join(', ')} supports at most {formatCount(Math.min(...tooLarge.map((id) => algorithms.find((item) => item.id === id)!.max_size)))} values.
+              {text.supportsAtMost(
+                tooLarge.map(name).join(', '),
+                formatCount(Math.min(...tooLarge.map((id) => algorithms.find((item) => item.id === id)!.max_size))),
+              )}
             </p>
           )}
           <button
@@ -180,28 +183,28 @@ export function SuiteSection({ algorithms, selected, onSelect }: SuiteSectionPro
             disabled={busy || !selected.length || !cases || cases > MAX_CASES || tooLarge.length > 0}
             onClick={run}
           >
-            {busy ? 'Running suite…' : 'Run suite'}
+            {busy ? text.runningSuite : text.runSuite}
           </button>
         </div>
       </div>
 
-      {error && (
+      {error !== null && (
         <p className="error" role="alert">
-          {error}
+          {errorMessage(error, text)}
         </p>
       )}
-      {!result && !error && <p className="empty">{busy ? 'Running suite…' : 'Choose sizes, patterns and algorithms, then run the suite.'}</p>}
+      {!result && error === null && <p className="empty">{busy ? text.runningSuite : text.chooseSuite}</p>}
 
       {result && ranWith && (
         <>
-          <div className="segmented" role="tablist" aria-label="Measure">
+          <div className="segmented" role="tablist" aria-label={text.measure}>
             {METRICS.map((entry) => (
               <button key={entry.id} type="button" role="tab" aria-selected={metric === entry.id} onClick={() => setMetric(entry.id)}>
-                {entry.label}
+                {text[entry.label] as string}
               </button>
             ))}
           </div>
-          <ul className="chart-legend" aria-label="Algorithms">
+          <ul className="chart-legend" aria-label={text.algorithms}>
             {ranWith.ids.map((id) => (
               <li key={id}>
                 <button type="button" className="chart-legend__item" aria-pressed={slotOf(id) > 0} onClick={() => toggleColour(id)}>
@@ -212,15 +215,15 @@ export function SuiteSection({ algorithms, selected, onSelect }: SuiteSectionPro
             ))}
           </ul>
           {ranWith.ids.length > COLOURED_LINES && (
-            <p className="chart__caption">Up to {COLOURED_LINES} lines are coloured at once; click a name to colour or grey it.</p>
+            <p className="chart__caption">{text.colourHint(COLOURED_LINES)}</p>
           )}
           <div className="small-multiples">
             {panels.map((panel) => (
               <LineChart
                 key={panel.distribution}
-                title={`${distributionLabel(panel.distribution)} input`}
+                title={text.patternInput(distributionLabel(text, panel.distribution))}
                 xValues={ranWith.sizes}
-                xLabel="Input size"
+                xLabel={text.inputSize}
                 series={panel.series}
                 yMax={yMax}
                 format={format}
@@ -230,18 +233,18 @@ export function SuiteSection({ algorithms, selected, onSelect }: SuiteSectionPro
           </div>
           <p className="chart__caption">
             {metric === 'time'
-              ? 'Median of the measured runs; timings depend on this machine and vary between runs.'
-              : `${metricLabel} are exact counts for one sort of each case.`}
+              ? text.timeCaption
+              : text.exactCountsCaption(metricLabel)}
           </p>
 
           <details className="table-view">
-            <summary>Show all numbers</summary>
+            <summary>{text.showAllNumbers}</summary>
             <div className="table-scroll">
               <table>
                 <thead>
                   <tr>
-                    <th scope="col">Pattern</th>
-                    <th scope="col">Size</th>
+                    <th scope="col">{text.pattern}</th>
+                    <th scope="col">{text.size}</th>
                     {ranWith.ids.map((id) => (
                       <th key={id} scope="col">
                         {name(id)}
@@ -253,7 +256,7 @@ export function SuiteSection({ algorithms, selected, onSelect }: SuiteSectionPro
                   {ranWith.distributions.flatMap((distribution) =>
                     ranWith.sizes.map((size) => (
                       <tr key={`${distribution}-${size}`}>
-                        <th scope="row">{distributionLabel(distribution)}</th>
+                        <th scope="row">{distributionLabel(text, distribution)}</th>
                         <td>{size}</td>
                         {ranWith.ids.map((id) => {
                           const value = valueOf(distribution, size, id)

@@ -1,3 +1,4 @@
+import { useText } from '../i18n/language'
 import { DISTRIBUTIONS, integerText, type DatasetSettings, type Distribution } from './lab'
 
 interface DatasetFieldsProps {
@@ -9,6 +10,7 @@ interface DatasetFieldsProps {
 }
 
 export function DatasetFields({ value, onChange, maxSize, sizeControl }: DatasetFieldsProps) {
+  const text = useText()
   const set = <K extends keyof DatasetSettings>(key: K, next: DatasetSettings[K]) =>
     onChange({ ...value, [key]: next })
 
@@ -16,7 +18,7 @@ export function DatasetFields({ value, onChange, maxSize, sizeControl }: Dataset
     <>
       <label>
         <span className="controls__label">
-          Size {sizeControl === 'slider' && <output>{value.size}</output>}
+          {text.size} {sizeControl === 'slider' && <output>{value.size}</output>}
         </span>
         {sizeControl === 'slider' ? (
           <input type="range" min={2} max={maxSize} value={value.size} onChange={(event) => set('size', Number(event.target.value))} />
@@ -32,27 +34,27 @@ export function DatasetFields({ value, onChange, maxSize, sizeControl }: Dataset
       </label>
       <div className="controls__row">
         <label>
-          Min
+          {text.min}
           <input type="number" value={value.minimum} onChange={(event) => set('minimum', Number(event.target.value))} />
         </label>
         <label>
-          Max
+          {text.max}
           <input type="number" value={value.maximum} onChange={(event) => set('maximum', Number(event.target.value))} />
         </label>
       </div>
       <label>
-        Pattern
+        {text.pattern}
         <select value={value.distribution} onChange={(event) => set('distribution', event.target.value as Distribution)}>
           {DISTRIBUTIONS.map((item) => (
             <option key={item.value} value={item.value}>
-              {item.label}
+              {text[item.label]}
             </option>
           ))}
         </select>
       </label>
       <label>
-        Seed
-        <input value={value.seed} placeholder="random" inputMode="numeric" onChange={(event) => set('seed', integerText(event.target.value, false))} />
+        {text.seed}
+        <input value={value.seed} placeholder={text.seedPlaceholder} inputMode="numeric" onChange={(event) => set('seed', integerText(event.target.value, false))} />
       </label>
     </>
   )
