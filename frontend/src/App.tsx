@@ -40,6 +40,23 @@ export default function App() {
           <span className="topbar__brand">Algo<span>Lab</span></span>
           <span className="topbar__tagline">SORTING LAB</span>
         </div>
+        <nav className="topbar__tabs" aria-label="Algorithm categories" role="tablist">
+          <button type="button" className="topbar__tab topbar__tab--active" role="tab" aria-selected="true" aria-controls="sorting-panel">
+            Sorting
+          </button>
+          <button type="button" className="topbar__tab" role="tab" aria-selected="false" disabled title="Coming soon">
+            Searching
+          </button>
+          <button type="button" className="topbar__tab" role="tab" aria-selected="false" disabled title="Coming soon">
+            Graphs
+          </button>
+          <button type="button" className="topbar__tab" role="tab" aria-selected="false" disabled title="Coming soon">
+            Dynamic Programming
+          </button>
+          <button type="button" className="topbar__tab" role="tab" aria-selected="false" disabled title="Coming soon">
+            Backtracking
+          </button>
+        </nav>
         <button type="button" className="topbar__mode" onClick={toggleMode} aria-label={`Switch to ${mode === 'dark' ? 'light' : 'dark'} mode`}>
           <svg viewBox="0 0 20 20" aria-hidden="true">
             {mode === 'dark' ? (
@@ -55,7 +72,7 @@ export default function App() {
         </button>
       </header>
 
-      <div className="page">
+      <div className="page" id="sorting-panel" role="tabpanel" aria-label="Sorting algorithms">
         {loadError && (
           <p className="error" role="alert">
             {loadError}
