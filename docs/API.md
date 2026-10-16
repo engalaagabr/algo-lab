@@ -1,5 +1,8 @@
 # API guide
 
+For an end-to-end Arabic explanation of the frontend request flow and each algorithm, see
+[Frontend-to-algorithm flow (Arabic)](FRONTEND-FLOW-AR.md).
+
 Start AlgoLab using [RUNNING.md](RUNNING.md). The examples below use
 `http://127.0.0.1:8000`. All POST bodies are JSON objects with
 `Content-Type: application/json`; unknown fields are rejected.
