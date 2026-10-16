@@ -14,10 +14,12 @@ The domain has no framework imports. Application services accept a registry and 
 HTTP, processes, configuration, and JSON conversion are outer details. There is no database
 abstraction until persistence is needed.
 
-At the repository root, keep the Python backend in `src/algolab/`, backend tests in `tests/`,
-and shared documentation in `docs/`. A future web client belongs in a separate root-level
-`frontend/` directory and communicates with the backend over HTTP; it should not import the
-Python package. This keeps frontend framework dependencies out of the backend layers.
+The repository root contains two peer applications: `backend/` for the FastAPI service and
+`frontend/` for the web client. Backend Python code lives in `backend/src/algolab/`, with its
+tests in `backend/tests/`; backend-specific dependencies and container files live alongside
+that code. Shared documentation and Docker Compose orchestration stay at the repository root.
+The frontend communicates with the backend over HTTP and must not import its Python package.
+This keeps each application's tools and dependencies inside its own boundary.
 
 The FastAPI app factory in `main.py` composes the HTTP process. `infrastructure.executor`
 owns process-pool lifecycle and admission, while `infrastructure.worker` contains the

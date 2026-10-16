@@ -1,5 +1,9 @@
 # Contributing to AlgoLab
 
+The repository keeps the applications separate: backend code and Python tools are in
+`backend/`, the web client belongs in `frontend/`, and shared documentation stays in `docs/`.
+Make changes inside the directory for the application you are contributing to.
+
 We work together in the same GitHub repository. Ask the repository owner to add you as a
 collaborator if you do not have access yet. If you cannot push branches to the repository,
 use a fork and open your pull request from there.
@@ -48,9 +52,10 @@ git pull --ff-only origin dev
 - Domain and application code must not depend on FastAPI or Pydantic.
 - Benchmark tests should not assume fixed runtimes or a universally fastest algorithm.
 
-Before opening a pull request, run the checks available in your development environment:
+Before opening a backend pull request, run these from `backend/` with the root `.venv` active:
 
 ```bash
+source ../.venv/bin/activate
 ruff check .
 ruff format --check .
 mypy

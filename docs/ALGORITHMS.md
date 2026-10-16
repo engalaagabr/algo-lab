@@ -114,7 +114,7 @@ Python implementations; it is not a measurement of an independent optimized nati
 
 ## Adding an algorithm
 
-1. Add `src/algolab/algorithms/<stable_id>.py` with immutable `metadata` and a typed
+1. Add `backend/src/algolab/algorithms/<stable_id>.py` with immutable `metadata` and a typed
    `sort(context: SortContext) -> None`. Depend only on domain contracts and the standard
    library. Keep the implementation free of API, storage, worker, and timing concerns.
 2. Use `compare` for input-key comparisons, `swap`/`write` for main-array assignments,
@@ -126,7 +126,7 @@ Python implementations; it is not a measurement of an independent optimized nati
    workload; add a new workload model only with a corresponding application decision.
 4. Register `Algorithm(module.metadata, module.sort)` in `build_registry()`. IDs are public
    API identifiers; do not rename an existing ID without a compatibility decision.
-5. Extend the explicit ID and limit expectations in `tests/unit/test_algorithms.py`.
+5. Extend the explicit ID and limit expectations in `backend/tests/unit/test_algorithms.py`.
    Run the shared edge cases, exhaustive small inputs, seeded random inputs, original-copy
    isolation, raw/counted equivalence, metric examples, trace replay, and trace-cap checks.
    Add algorithm-specific allocation or large-input tests when needed.
