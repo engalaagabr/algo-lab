@@ -15,11 +15,13 @@ HTTP, processes, configuration, and JSON conversion are outer details. There is 
 abstraction until persistence is needed.
 
 The repository root contains two peer applications: `backend/` for the FastAPI service and
-`frontend/` for the web client. Backend Python code lives in `backend/src/algolab/`, with its
-tests in `backend/tests/`; backend-specific dependencies and container files live alongside
-that code. Shared documentation and Docker Compose orchestration stay at the repository root.
-The frontend communicates with the backend over HTTP and must not import its Python package.
-This keeps each application's tools and dependencies inside its own boundary.
+`frontend/` for the web client. Backend Python code lives directly under `backend/src/`, with
+separate `domain/`, `application/`, `algorithms/`, `infrastructure/`, and `presentation/`
+packages; its tests are in `backend/tests/`. Backend-specific dependencies and container
+files live alongside that code. Shared documentation and Docker Compose orchestration stay
+at the repository root. The frontend communicates with the backend over HTTP and must not
+import its Python modules. This keeps each application's tools and dependencies inside its
+own boundary.
 
 The FastAPI app factory in `main.py` composes the HTTP process. `infrastructure.executor`
 owns process-pool lifecycle and admission, while `infrastructure.worker` contains the

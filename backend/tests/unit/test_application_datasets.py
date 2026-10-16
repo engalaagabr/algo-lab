@@ -2,10 +2,10 @@ from dataclasses import replace
 
 import pytest
 
-from algolab.application.datasets import generate_dataset
-from algolab.application.models import DatasetSpec
-from algolab.application.validation import DISTRIBUTIONS, MAX_SEED
-from algolab.domain.errors import DomainError
+from application.datasets import generate_dataset
+from application.models import DatasetSpec
+from application.validation import DISTRIBUTIONS, MAX_SEED
+from domain.errors import DomainError
 
 
 @pytest.mark.parametrize("distribution", DISTRIBUTIONS)

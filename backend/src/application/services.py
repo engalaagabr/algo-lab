@@ -2,8 +2,8 @@ from collections.abc import Sequence
 from random import Random
 from statistics import median
 
-from algolab.application.datasets import concrete_seed, generate_dataset
-from algolab.application.models import (
+from application.datasets import concrete_seed, generate_dataset
+from application.models import (
     AlgorithmBenchmark,
     BenchmarkCase,
     BenchmarkResult,
@@ -14,8 +14,8 @@ from algolab.application.models import (
     SortResult,
     SuiteSpec,
 )
-from algolab.application.ports import Clock
-from algolab.application.validation import (
+from application.ports import Clock
+from application.validation import (
     MAX_ALGORITHMS,
     MAX_DATASET_SIZE,
     MAX_SEED,
@@ -29,10 +29,10 @@ from algolab.application.validation import (
     validate_repetitions,
     validate_values,
 )
-from algolab.domain.errors import DomainError, InvalidResult, LimitExceeded
-from algolab.domain.models import Algorithm, Metrics
-from algolab.domain.operations import SortContext
-from algolab.domain.registry import AlgorithmRegistry
+from domain.errors import DomainError, InvalidResult, LimitExceeded
+from domain.models import Algorithm, Metrics
+from domain.operations import SortContext
+from domain.registry import AlgorithmRegistry
 
 
 def _metrics(metrics: Metrics) -> OperationMetrics:

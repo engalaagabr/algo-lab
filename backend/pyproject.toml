@@ -19,11 +19,21 @@ dependencies = [
 dev = ["pytest>=8,<10", "httpx2>=2.13,<3", "ruff>=0.11,<1", "mypy>=1.15,<2"]
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/algolab"]
+packages = [
+  "src/algorithms",
+  "src/application",
+  "src/domain",
+  "src/infrastructure",
+  "src/presentation",
+]
+
+[tool.hatch.build.targets.wheel.force-include]
+"src/main.py" = "main.py"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-ra"
+pythonpath = ["src"]
 
 [tool.ruff]
 target-version = "py312"
@@ -35,4 +45,4 @@ select = ["E", "F", "I", "UP", "B"]
 [tool.mypy]
 python_version = "3.12"
 strict = true
-files = ["src/algolab"]
+files = ["src"]

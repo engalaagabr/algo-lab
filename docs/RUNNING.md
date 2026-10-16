@@ -39,14 +39,14 @@ reload:
 
 ```bash
 source ../.venv/bin/activate
-uvicorn algolab.main:app --reload
+uvicorn main:app --app-dir src --reload
 ```
 
 For a local session without reload, also from `backend/`:
 
 ```bash
 source ../.venv/bin/activate
-uvicorn algolab.main:app --host 127.0.0.1 --port 8000 --workers 1
+uvicorn main:app --app-dir src --host 127.0.0.1 --port 8000 --workers 1
 ```
 
 Use **one Uvicorn worker**. Each API process owns its own single CPU worker and admission
@@ -155,7 +155,7 @@ CORS is disabled by default. To allow a local frontend origin, set
 cd backend
 source ../.venv/bin/activate
 export ALGOLAB_CORS_ORIGINS='http://localhost:5173,http://127.0.0.1:5173'
-uvicorn algolab.main:app --reload
+uvicorn main:app --app-dir src --reload
 ```
 
 The setting is a comma-separated list of origins, including scheme and port. Whitespace is
@@ -179,7 +179,7 @@ For focused inspection, use `pytest tests/unit/test_algorithms.py` or
 
 | Symptom | Check |
 | --- | --- |
-| `uvicorn` missing or `algolab` import fails | Activate `../.venv` from `backend/` and repeat the editable install there |
+| `uvicorn` missing or an application import fails | Activate `../.venv` from `backend/` and repeat the editable install there |
 | Port 8000 is occupied | Stop the other local server or choose `--port 8001`, then update the URLs |
 | HTTP 413 | Reduce the JSON body below 1,000,000 bytes |
 | HTTP 422 | Read `error.code` and `error.message`; reduce workload or correct request fields |

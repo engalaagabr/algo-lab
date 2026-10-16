@@ -114,7 +114,7 @@ Python implementations; it is not a measurement of an independent optimized nati
 
 ## Adding an algorithm
 
-1. Add `backend/src/algolab/algorithms/<stable_id>.py` with immutable `metadata` and a typed
+1. Add `backend/src/algorithms/<stable_id>.py` with immutable `metadata` and a typed
    `sort(context: SortContext) -> None`. Depend only on domain contracts and the standard
    library. Keep the implementation free of API, storage, worker, and timing concerns.
 2. Use `compare` for input-key comparisons, `swap`/`write` for main-array assignments,

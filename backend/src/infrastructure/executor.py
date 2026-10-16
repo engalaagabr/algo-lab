@@ -6,14 +6,14 @@ from concurrent.futures.process import BrokenProcessPool
 from functools import partial
 from typing import TypeVar
 
-from algolab.application.execution import ExecutionBusy, ExecutionUnavailable
-from algolab.application.models import (
+from application.execution import ExecutionBusy, ExecutionUnavailable
+from application.models import (
     BenchmarkResult,
     BenchmarkSuiteResult,
     SortExperiment,
     SuiteSpec,
 )
-from algolab.infrastructure.worker import run_benchmark_job, run_sort_job, run_suite_job
+from infrastructure.worker import run_benchmark_job, run_sort_job, run_suite_job
 
 T = TypeVar("T")
 

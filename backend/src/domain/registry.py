@@ -1,7 +1,7 @@
 from collections.abc import Iterable
 
-from algolab.domain.errors import UnknownAlgorithm
-from algolab.domain.models import Algorithm, AlgorithmMetadata
+from domain.errors import UnknownAlgorithm
+from domain.models import Algorithm, AlgorithmMetadata
 
 
 class AlgorithmRegistry:

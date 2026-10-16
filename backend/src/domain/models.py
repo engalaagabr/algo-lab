@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Literal
 
 if TYPE_CHECKING:
-    from algolab.domain.operations import SortContext
+    from domain.operations import SortContext
 
 
 @dataclass(frozen=True, slots=True)

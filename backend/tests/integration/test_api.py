@@ -5,17 +5,17 @@ from typing import Any
 import pytest
 from fastapi.testclient import TestClient
 
-from algolab.algorithms import build_registry
-from algolab.application.execution import ExecutionBusy, ExecutionUnavailable
-from algolab.application.models import (
+from algorithms import build_registry
+from application.execution import ExecutionBusy, ExecutionUnavailable
+from application.models import (
     BenchmarkResult,
     BenchmarkSuiteResult,
     SortExperiment,
     SuiteSpec,
 )
-from algolab.application.services import ExperimentService
-from algolab.domain.errors import InvalidResult
-from algolab.main import create_app
+from application.services import ExperimentService
+from domain.errors import InvalidResult
+from main import create_app
 
 ALGORITHM_IDS = {
     "selection_sort",

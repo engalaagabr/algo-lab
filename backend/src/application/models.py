@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from algolab.domain.models import SortEvent
+from domain.models import SortEvent
 
 
 @dataclass(frozen=True, slots=True)

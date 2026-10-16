@@ -2,11 +2,11 @@ from dataclasses import replace
 
 import pytest
 
-from algolab.algorithms import build_registry
-from algolab.application.services import ExperimentService
-from algolab.domain.errors import LimitExceeded
-from algolab.domain.models import Algorithm
-from algolab.domain.registry import AlgorithmRegistry
+from algorithms import build_registry
+from application.services import ExperimentService
+from domain.errors import LimitExceeded
+from domain.models import Algorithm
+from domain.registry import AlgorithmRegistry
 
 
 class UnusedClock:
