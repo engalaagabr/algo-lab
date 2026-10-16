@@ -8,7 +8,7 @@
   configurable host port, graceful init process, and restart policy.
 - Added `.env.example` for the Compose port and optional CORS origins. The real `.env` and
   environment files are excluded from both Git and the Docker build context.
-- Added `.dockerignore` to keep source-control data, local environments, tests, docs, and the
+- Added `backend/.dockerignore` to keep source-control data, local environments, tests, docs, and the
   ignored local playground out of the image build context.
 - Documented Python and Compose startup in README and the running guide.
 

@@ -9,21 +9,22 @@ server-side playback/job-control API.
 The package supports Python 3.12 or newer. All 558 tests and strict type checking pass on
 Python 3.12.14 and 3.14.8. Python 3.13 has not been separately exercised.
 
-Run from the repository root. The following commands use Bash:
+Run these commands from `backend/`. The virtual environment stays in the repository root:
 
 ```bash
 python3 --version
-python3 -m venv .venv
-source .venv/bin/activate
+python3 -m venv ../.venv
+source ../.venv/bin/activate
 python -m pip install -c requirements.lock -e '.[dev]'
 ```
 
 Use a Python 3.12+ executable to create the virtual environment if `python3` points to an
 older interpreter. The editable development install includes pytest, HTTPX2, Ruff, and mypy.
-`requirements.lock` provides exact version constraints for runtime and development packages.
+`requirements.lock` in `backend/` provides exact version constraints for runtime and
+development packages.
 Constraints restrict versions; they do not install every package named in the file.
 
-For a runtime-only environment, use this install command instead:
+For a runtime-only environment, use this install command instead, still from `backend/`:
 
 ```bash
 python -m pip install -c requirements.lock .
@@ -33,15 +34,18 @@ No database setup, migration, credential, or external service is needed.
 
 ## Start the server
 
-For development with automatic reload:
+From `backend/`, activate the root virtual environment and start development with automatic
+reload:
 
 ```bash
+source ../.venv/bin/activate
 uvicorn algolab.main:app --reload
 ```
 
-For a local session without reload:
+For a local session without reload, also from `backend/`:
 
 ```bash
+source ../.venv/bin/activate
 uvicorn algolab.main:app --host 127.0.0.1 --port 8000 --workers 1
 ```
 
@@ -72,8 +76,8 @@ endpoints. For complete requests and response fields, use [API.md](API.md).
 
 ## Docker and environment configuration
 
-The repository includes a single-service Docker Compose setup. It runs one Uvicorn worker
-and publishes the API on host port 8000 by default.
+Run Compose commands from the repository root. It builds the backend from `backend/`, reads
+the root `.env`, runs one Uvicorn worker, and publishes the API on host port 8000 by default.
 
 ```bash
 cp .env.example .env
@@ -148,6 +152,8 @@ CORS is disabled by default. To allow a local frontend origin, set
 `ALGOLAB_CORS_ORIGINS` before starting the server:
 
 ```bash
+cd backend
+source ../.venv/bin/activate
 export ALGOLAB_CORS_ORIGINS='http://localhost:5173,http://127.0.0.1:5173'
 uvicorn algolab.main:app --reload
 ```
@@ -159,7 +165,7 @@ changing the environment. CORS controls browser access; it does not add authenti
 
 ## Checks and troubleshooting
 
-Run these in the activated development environment:
+Run these from `backend/` in the activated development environment:
 
 ```bash
 ruff check .
@@ -173,7 +179,7 @@ For focused inspection, use `pytest tests/unit/test_algorithms.py` or
 
 | Symptom | Check |
 | --- | --- |
-| `uvicorn` missing or `algolab` import fails | Activate `.venv` and repeat the editable install from the repository root |
+| `uvicorn` missing or `algolab` import fails | Activate `../.venv` from `backend/` and repeat the editable install there |
 | Port 8000 is occupied | Stop the other local server or choose `--port 8001`, then update the URLs |
 | HTTP 413 | Reduce the JSON body below 1,000,000 bytes |
 | HTTP 422 | Read `error.code` and `error.message`; reduce workload or correct request fields |

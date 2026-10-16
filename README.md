@@ -35,7 +35,7 @@ a universally fastest algorithm.
 
 ## Project guides
 
-- [Architecture](docs/ARCHITECTURE.md)
+- [Architecture and folder layout](docs/ARCHITECTURE.md)
 - [Algorithms](docs/ALGORITHMS.md)
 - [Benchmarking](docs/BENCHMARKING.md)
 - [Contributing](CONTRIBUTING.md)

@@ -13,11 +13,14 @@ commits, checks, phase documentation, and merge into `dev`. `main` is reserved f
 | 5 | `feat/integration-docs` | Integration verification, usage examples, deployment docs |
 | 6 | `feat/docker-compose` | Non-root API image, Compose service, health check, environment template |
 | 7 | `refactor/worker-composition` | Isolate process worker entry points from API composition |
+| 8 | `refactor/mono-repo-layout` | Separate backend and frontend applications at the repository root |
 
-Phases 1–6 are complete. Phase 7 clarifies the process worker boundary. See the numbered
-reports under [phases](phases/) for changes and validation. The initial backend handover is documented in
+Phases 1–6 are complete. Phase 7 clarifies the process worker boundary, and phase 8 organizes
+the applications into sibling directories. See the numbered reports under [phases](phases/)
+for changes and validation. The initial backend handover is documented in
 [phase 5](phases/05-integration.md); the latest architecture cleanup is in
-[phase 7](phases/07-worker-composition.md).
+[phase 7](phases/07-worker-composition.md); the latest directory layout is in
+[phase 8](phases/08-repository-layout.md).
 
 ## Initial implementation choices
 
