@@ -13,6 +13,9 @@ This version provides the backend and interactive API documentation. It has no f
 authentication, persistent storage, saved experiment history, or live streaming. Clients can
 use the returned complete traces to implement their own playback controls.
 
+The ignored `local-ui/` folder is an optional local testing playground and is not included in
+the Docker image.
+
 ## Run locally
 
 Requires Python 3.12 or newer. The full 558-test suite passes on Python 3.12.14 and 3.14.8.
@@ -33,6 +36,22 @@ Open:
 - [ReDoc](http://127.0.0.1:8000/redoc) to browse the API reference.
 - [OpenAPI JSON](http://127.0.0.1:8000/openapi.json) for client generation or tooling.
 - [Health](http://127.0.0.1:8000/health) for process liveness.
+
+## Run with Docker Compose
+
+Requires Docker Engine and the Docker Compose plugin. Copy the example environment file and
+start the API:
+
+```bash
+cp .env.example .env
+docker compose up --build -d
+```
+
+The API is available at the same URLs above. Follow logs with `docker compose logs -f api`
+and stop the container with `docker compose down`. `.env` is ignored by Git; commit changes
+to `.env.example` when adding or changing configuration options. See
+[Docker and environment configuration](docs/RUNNING.md#docker-and-environment-configuration)
+for port and CORS settings.
 
 Run one Uvicorn worker so experiments share one CPU execution worker. The default admission
 limit is four unfinished experiment requests, including the running request. Additional
@@ -92,9 +111,10 @@ uses `python -m pip install -c requirements.lock .`.
 - Phase notes: [foundation](docs/phases/01-foundation.md),
   [algorithms](docs/phases/02-algorithms.md),
   [benchmark engine](docs/phases/03-benchmark-engine.md),
-  [FastAPI endpoints](docs/phases/04-fastapi-endpoints.md), and
-  [integration and handover](docs/phases/05-integration.md).
+  [FastAPI endpoints](docs/phases/04-fastapi-endpoints.md),
+  [integration and handover](docs/phases/05-integration.md), and
+  [Docker setup](docs/phases/06-docker.md).
 - [Contribution workflow](CONTRIBUTING.md)
 
-Development and phase merges are local. GitHub publication is deferred, and `main` remains
-at its initial baseline until a release is explicitly requested. No deployment is implied.
+Development and phase merges use `dev`; `main` is reserved for releases. Docker Compose is
+provided for local containerized development and does not imply a production deployment.

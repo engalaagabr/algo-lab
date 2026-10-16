@@ -1,9 +1,8 @@
 # Running AlgoLab locally
 
-These instructions prepare and run a local development service. GitHub publication and
-deployment have not been performed. The project currently delivers a stateless FastAPI
-backend; there is no frontend, authentication, database, stored experiment history, live
-streaming, or server-side playback/job-control API.
+These instructions prepare and run the stateless FastAPI backend locally or with Docker.
+There is no authentication, database, stored experiment history, live streaming, or
+server-side playback/job-control API.
 
 ## Python and environment
 
@@ -70,6 +69,35 @@ curl -sS http://127.0.0.1:8000/api/v1/algorithms
 The health endpoint remains independent of queued experiments. A healthy API process does
 not guarantee an available execution worker; execution failures are reported by experiment
 endpoints. For complete requests and response fields, use [API.md](API.md).
+
+## Docker and environment configuration
+
+The repository includes a single-service Docker Compose setup. It runs one Uvicorn worker
+and publishes the API on host port 8000 by default.
+
+```bash
+cp .env.example .env
+docker compose up --build -d
+docker compose ps
+curl -sS http://127.0.0.1:8000/health
+```
+
+The Compose health check also requests `/health`. View logs with
+`docker compose logs -f api`, then stop and remove the container and network with
+`docker compose down`.
+
+`.env.example` contains the supported Compose settings. Copy it to `.env` for local changes;
+`.env` is ignored by Git and must not contain values that should be committed. Set
+`ALGOLAB_PORT` to change the host port, for example `8010`. The app still listens on port
+8000 inside the container. `ALGOLAB_CORS_ORIGINS` is an optional comma-separated list of
+frontend origins; leave it empty to keep CORS disabled. Recreate the container after changing
+settings with `docker compose up -d --force-recreate`.
+
+The image uses Python 3.12, installs the runtime package, and runs as a non-root user. Tests,
+docs, local UI files, virtual environments, and `.env` files are excluded from the build
+context. The container does not mount the source tree and is intended for repeatable local
+API runs; use the Python virtual environment workflow above for automatic reload during
+development.
 
 ## Execution and cancellation
 
