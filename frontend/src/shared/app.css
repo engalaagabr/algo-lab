@@ -1,29 +1,29 @@
 /*
- * Graphite: a quiet workbench with hairline seams where colour is reserved for state. Dark and
+ * Graphite: a quiet workbench with lime, mint, blue and rose accents. Dark and
  * light modes redefine the same tokens; every layout rule below is shared.
  */
 .app {
-  --ground: #16181d;
-  --panel: #1c1f25;
-  --raised: #23272f;
-  --line: #2e323b;
-  --ink: #e6e6e6;
-  --muted: #8a8f99;
-  --accent: #7fd1b9;
-  --accent-ink: #16181d;
-  --bar-fill: #4a505c;
-  --bar-done: #7fd1b9;
+  --ground: #1e1f20;
+  --panel: #24282d;
+  --raised: #2b3037;
+  --line: #393f47;
+  --ink: #f1f3f5;
+  --muted: #9aa2ad;
+  --accent: #c8f238;
+  --accent-ink: #20221a;
+  --bar-fill: #3a4048;
+  --bar-done: #75efc2;
   /* Tracing colours: one per event kind, none shared with the sorted state. */
-  --compare: #f5c542;
-  --compare-ink: #16181d;
-  --swap: #ff6b81;
-  --swap-ink: #16181d;
-  --write: #6ea8ff;
-  --write-ink: #16181d;
-  --op-outline: #e6e6e6;
-  --error-line: #ff8a80;
-  --error-bg: #3a1d1d;
-  --error-ink: #ffd8d4;
+  --compare: #c8f238;
+  --compare-ink: #20221a;
+  --swap: #ffb4bb;
+  --swap-ink: #292024;
+  --write: #78baff;
+  --write-ink: #172333;
+  --op-outline: #f1f3f5;
+  --error-line: #ff9da8;
+  --error-bg: #39262a;
+  --error-ink: #ffdce0;
   --font-ui: 'Manrope', system-ui, sans-serif;
   --font-num: 'JetBrains Mono', ui-monospace, monospace;
   --radius: 8px;
@@ -38,26 +38,26 @@
 }
 
 .app[data-mode='light'] {
-  --ground: #f3f4f6;
+  --ground: #f4f5f1;
   --panel: #ffffff;
-  --raised: #f7f8fa;
-  --line: #dcdfe5;
-  --ink: #16181d;
-  --muted: #5d6470;
-  --accent: #0f7d63;
-  --accent-ink: #ffffff;
-  --bar-fill: #b4bac5;
-  --bar-done: #1f9a78;
-  --compare: #e0a800;
+  --raised: #f6f7f3;
+  --line: #d9ddd4;
+  --ink: #1e211d;
+  --muted: #626a60;
+  --accent: #a2c52d;
+  --accent-ink: #1e2117;
+  --bar-fill: #b8beb5;
+  --bar-done: #188a67;
+  --compare: #91b51e;
   --compare-ink: #16181d;
-  --swap: #d6336c;
+  --swap: #d75c68;
   --swap-ink: #ffffff;
-  --write: #2f6db5;
+  --write: #347fc6;
   --write-ink: #ffffff;
-  --op-outline: #16181d;
-  --error-line: #b3261e;
-  --error-bg: #fdecea;
-  --error-ink: #5c1410;
+  --op-outline: #1e211d;
+  --error-line: #b43e4c;
+  --error-bg: #fce8ea;
+  --error-ink: #5c1d25;
 
   color-scheme: light;
 }
