@@ -1,9 +1,8 @@
 # Delivery plan
 
-Scope: backend only, FastAPI, modular clean architecture, ten agreed sorting algorithms.
-Each phase has its own feature branch, incremental commits, checks, phase documentation,
-and a local merge into `dev`. GitHub publication is deferred. `main` stays at its initial
-baseline until a release is explicitly requested.
+Scope: FastAPI backend, modular clean architecture, ten agreed sorting algorithms, and
+repeatable local Docker Compose execution. Each phase has its own feature branch, incremental
+commits, checks, phase documentation, and merge into `dev`. `main` is reserved for releases.
 
 | Phase | Branch | Deliverable |
 | --- | --- | --- |
@@ -12,10 +11,11 @@ baseline until a release is explicitly requested.
 | 3 | `feat/benchmark-engine` | Reproducible datasets, sorting, repeated benchmarks, suites |
 | 4 | `feat/fastapi-endpoints` | Versioned API, validation, isolated CPU execution, OpenAPI |
 | 5 | `feat/integration-docs` | Integration verification, usage examples, deployment docs |
+| 6 | `feat/docker-compose` | Non-root API image, Compose service, health check, environment template |
 
-All five phases are complete and integrated into `dev`. See the corresponding numbered
-reports under [phases](phases/) for changes and validation. The completed handover is
-documented in [phase 5](phases/05-integration.md).
+Phases 1–5 are complete. Phase 6 adds local container tooling. See the numbered reports under
+[phases](phases/) for changes and validation. The initial backend handover is documented in
+[phase 5](phases/05-integration.md).
 
 ## Initial implementation choices
 
