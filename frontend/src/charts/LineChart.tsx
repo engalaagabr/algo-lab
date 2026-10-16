@@ -5,7 +5,7 @@ import { niceTicks } from './scale'
 export interface LineSeries {
   id: string
   label: string
-  /** Fixed palette slot (1-based) so an algorithm keeps its colour across charts. */
+  /** Fixed palette slot (1-based) so an algorithm keeps its colour across charts; 0 is a grey context line. */
   slot: number
   /** One value per x position; null where the case was not measured. */
   values: (number | null)[]
@@ -79,7 +79,8 @@ export function LineChart({ title, xValues, xLabel, series, yMax, format, tickFo
             {hover !== null && (
               <line className="chart__crosshair" x1={x(xValues[hover])} x2={x(xValues[hover])} y1={MARGIN.top} y2={MARGIN.top + plotHeight} />
             )}
-            {series.map((item) => {
+            {/* Grey context lines go underneath the coloured ones. */}
+            {[...series].sort((left, right) => Number(left.slot > 0) - Number(right.slot > 0)).map((item) => {
               const points = item.values
                 .map((value, index) => (value === null ? null : ([x(xValues[index]), y(value)] as const)))
                 .filter((point): point is readonly [number, number] => point !== null)

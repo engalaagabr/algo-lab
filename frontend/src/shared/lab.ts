@@ -1,5 +1,8 @@
 import { ApiError } from '../api/client'
 
+/** The page starts with these selected in every section. */
+export const DEFAULT_ALGORITHMS = ['bubble_sort', 'insertion_sort', 'quick_sort']
+
 export type Distribution = 'random' | 'sorted' | 'reversed' | 'nearly_sorted' | 'few_unique'
 
 export interface DatasetSettings {

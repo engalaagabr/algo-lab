@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { api, request, type AlgorithmMetadata } from './api/client'
 import { BenchmarkSection } from './benchmark/BenchmarkSection'
-import { errorMessage } from './shared/lab'
+import { DEFAULT_ALGORITHMS, errorMessage } from './shared/lab'
 import { initialMode, rememberMode, type Mode } from './shared/mode'
 import { SuiteSection } from './suite/SuiteSection'
 import { RaceSection } from './visualizer/RaceSection'
@@ -11,6 +11,8 @@ import './shared/charts.css'
 export default function App() {
   const [mode, setMode] = useState<Mode>(initialMode)
   const [algorithms, setAlgorithms] = useState<AlgorithmMetadata[]>([])
+  // One selection for the whole page, so the benchmark and suite measure the algorithms in the race.
+  const [selected, setSelected] = useState<string[]>(DEFAULT_ALGORITHMS)
   const [loadError, setLoadError] = useState<string | null>(null)
 
   useEffect(() => {
@@ -40,9 +42,9 @@ export default function App() {
             {loadError}
           </p>
         )}
-        <RaceSection algorithms={algorithms} />
-        <BenchmarkSection algorithms={algorithms} />
-        <SuiteSection algorithms={algorithms} />
+        <RaceSection algorithms={algorithms} selected={selected} onSelect={setSelected} />
+        <BenchmarkSection algorithms={algorithms} selected={selected} onSelect={setSelected} />
+        <SuiteSection algorithms={algorithms} selected={selected} onSelect={setSelected} />
       </div>
     </div>
   )

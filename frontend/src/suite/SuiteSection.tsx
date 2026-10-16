@@ -7,8 +7,9 @@ import { DISTRIBUTIONS, distributionLabel, errorMessage, formatCount, formatDura
 
 const SIZE_PRESETS = [10, 25, 50, 100, 250, 500, 1000]
 const MAX_CASES = 12
-// Lines in small multiples stay legible up to three series; more fold into another run.
-const MAX_SERIES = 3
+const MAX_ALGORITHMS = 10
+// Only three lines get a colour at once; the rest stay grey for context until picked in the legend.
+const COLOURED_LINES = 3
 
 type Metric = 'time' | 'comparisons' | 'array_writes' | 'swaps'
 
@@ -21,10 +22,11 @@ const METRICS: { id: Metric; label: string }[] = [
 
 interface SuiteSectionProps {
   algorithms: AlgorithmMetadata[]
+  selected: string[]
+  onSelect: (selected: string[]) => void
 }
 
-export function SuiteSection({ algorithms }: SuiteSectionProps) {
-  const [selected, setSelected] = useState(['insertion_sort', 'heap_sort', 'quick_sort'])
+export function SuiteSection({ algorithms, selected, onSelect }: SuiteSectionProps) {
   const [sizes, setSizes] = useState([50, 100, 250, 500])
   const [distributions, setDistributions] = useState<Distribution[]>(['random', 'reversed', 'nearly_sorted'])
   const [minimum, setMinimum] = useState(1)
@@ -33,6 +35,8 @@ export function SuiteSection({ algorithms }: SuiteSectionProps) {
   const [repeats, setRepeats] = useState(3)
   const [result, setResult] = useState<BenchmarkSuiteResult | null>(null)
   const [ranWith, setRanWith] = useState<{ ids: string[]; sizes: number[]; distributions: Distribution[] } | null>(null)
+  /** Palette slots in order; an algorithm keeps its slot until it is unpicked. */
+  const [coloured, setColoured] = useState<(string | null)[]>([])
   const [metric, setMetric] = useState<Metric>('comparisons')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -62,6 +66,7 @@ export function SuiteSection({ algorithms }: SuiteSectionProps) {
       setResult(response)
       setSeed(String(response.seed))
       setRanWith({ ids: selected, sizes: sortedSizes, distributions })
+      setColoured(selected.slice(0, COLOURED_LINES))
     } catch (cause) {
       setError(errorMessage(cause))
     } finally {
@@ -76,13 +81,27 @@ export function SuiteSection({ algorithms }: SuiteSectionProps) {
     return metric === 'time' ? entry.median_ns : entry.metrics[metric]
   }
 
+  // Slot 0 is the grey context line.
+  const slotOf = (id: string) => coloured.indexOf(id) + 1
+
+  const toggleColour = (id: string) => {
+    const next = Array.from({ length: COLOURED_LINES }, (_, index) => coloured[index] ?? null)
+    const at = next.indexOf(id)
+    if (at >= 0) next[at] = null
+    else {
+      const free = next.indexOf(null)
+      next[free >= 0 ? free : 0] = id
+    }
+    setColoured(next)
+  }
+
   const panels =
     ranWith?.distributions.map((distribution) => ({
       distribution,
-      series: ranWith.ids.map<LineSeries>((id, index) => ({
+      series: ranWith.ids.map<LineSeries>((id) => ({
         id,
         label: name(id),
-        slot: index + 1,
+        slot: slotOf(id),
         values: ranWith.sizes.map((size) => valueOf(distribution, size, id)),
       })),
     })) ?? []
@@ -147,7 +166,7 @@ export function SuiteSection({ algorithms }: SuiteSectionProps) {
           Repeats
           <input type="number" min={1} max={15} value={repeats} onChange={(event) => setRepeats(Math.max(1, Math.min(15, Number(event.target.value) || 1)))} />
         </label>
-        <AlgorithmPicker algorithms={algorithms} selected={selected} onChange={setSelected} max={MAX_SERIES} inputSize={largest} />
+        <AlgorithmPicker algorithms={algorithms} selected={selected} onChange={onSelect} max={MAX_ALGORITHMS} inputSize={largest} />
         <div className="controls__actions">
           {cases > MAX_CASES && <p className="controls__hint">Pick at most {MAX_CASES} size × pattern combinations.</p>}
           {tooLarge.length > 0 && (
@@ -171,7 +190,7 @@ export function SuiteSection({ algorithms }: SuiteSectionProps) {
           {error}
         </p>
       )}
-      {!result && !error && <p className="empty">{busy ? 'Running suite…' : 'Choose sizes, patterns and up to three algorithms, then run the suite.'}</p>}
+      {!result && !error && <p className="empty">{busy ? 'Running suite…' : 'Choose sizes, patterns and algorithms, then run the suite.'}</p>}
 
       {result && ranWith && (
         <>
@@ -183,13 +202,18 @@ export function SuiteSection({ algorithms }: SuiteSectionProps) {
             ))}
           </div>
           <ul className="chart-legend" aria-label="Algorithms">
-            {ranWith.ids.map((id, index) => (
+            {ranWith.ids.map((id) => (
               <li key={id}>
-                <i className={`swatch swatch--line series--${index + 1}`} aria-hidden="true" />
-                {name(id)}
+                <button type="button" className="chart-legend__item" aria-pressed={slotOf(id) > 0} onClick={() => toggleColour(id)}>
+                  <i className={`swatch swatch--line series--${slotOf(id)}`} aria-hidden="true" />
+                  {name(id)}
+                </button>
               </li>
             ))}
           </ul>
+          {ranWith.ids.length > COLOURED_LINES && (
+            <p className="chart__caption">Up to {COLOURED_LINES} lines are coloured at once; click a name to colour or grey it.</p>
+          )}
           <div className="small-multiples">
             {panels.map((panel) => (
               <LineChart

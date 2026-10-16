@@ -24,8 +24,11 @@ The client is one page with three sections:
   with the sample range, or the exact operation counts. The noise warning is shown when the
   API reports overlapping timing ranges.
 - **Suite** runs `/benchmark-suites` over a size and pattern matrix and draws one line chart per
-  pattern on a shared scale, so growth rates can be compared. It is limited to three
-  algorithms to keep the lines readable.
+  pattern on a shared scale, so growth rates can be compared. Three lines are coloured at a
+  time and the rest stay grey for context; the legend picks which ones are coloured.
+
+The algorithm selection is shared by all three sections, so adding an algorithm to the race
+also adds it to the benchmark and the suite.
 
 The design is Graphite in dark and light modes. The chosen mode is remembered in the browser;
 the first visit follows the system preference.

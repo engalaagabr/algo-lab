@@ -20,9 +20,11 @@ const METRICS: { id: Metric; label: string }[] = [
 
 interface BenchmarkSectionProps {
   algorithms: AlgorithmMetadata[]
+  selected: string[]
+  onSelect: (selected: string[]) => void
 }
 
-export function BenchmarkSection({ algorithms }: BenchmarkSectionProps) {
+export function BenchmarkSection({ algorithms, selected, onSelect }: BenchmarkSectionProps) {
   const [settings, setSettings] = useState<DatasetSettings>({
     size: 500,
     minimum: 1,
@@ -30,7 +32,6 @@ export function BenchmarkSection({ algorithms }: BenchmarkSectionProps) {
     distribution: 'random',
     seed: '42',
   })
-  const [selected, setSelected] = useState(['insertion_sort', 'shell_sort', 'heap_sort', 'quick_sort'])
   const [repeats, setRepeats] = useState(5)
   const [warmups, setWarmups] = useState(1)
   const [result, setResult] = useState<BenchmarkResult | null>(null)
@@ -104,7 +105,7 @@ export function BenchmarkSection({ algorithms }: BenchmarkSectionProps) {
         <AlgorithmPicker
           algorithms={algorithms}
           selected={selected}
-          onChange={setSelected}
+          onChange={onSelect}
           max={MAX_ALGORITHMS}
           inputSize={settings.size}
         />

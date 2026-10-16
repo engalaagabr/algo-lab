@@ -1,19 +1,19 @@
 import { useCallback, useEffect, useState } from 'react'
 import { api, request, type AlgorithmMetadata, type SortExperiment } from '../api/client'
 import { DatasetFields } from '../shared/DatasetFields'
-import { datasetBody, errorMessage, type DatasetSettings } from '../shared/lab'
+import { datasetBody, DEFAULT_ALGORITHMS, errorMessage, type DatasetSettings } from '../shared/lab'
 import { Theater } from './Theater'
 
 const MAX_TRACE_SIZE = 128
 const MAX_RACERS = 10
-const DEFAULT_RACERS = ['bubble_sort', 'insertion_sort', 'quick_sort']
 
 interface RaceSectionProps {
   algorithms: AlgorithmMetadata[]
+  selected: string[]
+  onSelect: (selected: string[]) => void
 }
 
-export function RaceSection({ algorithms }: RaceSectionProps) {
-  const [racers, setRacers] = useState<string[]>(DEFAULT_RACERS)
+export function RaceSection({ algorithms, selected: racers, onSelect: setRacers }: RaceSectionProps) {
   const [settings, setSettings] = useState<DatasetSettings>({
     size: 24,
     minimum: 1,
@@ -62,7 +62,7 @@ export function RaceSection({ algorithms }: RaceSectionProps) {
     request(api.POST('/api/v1/datasets', { body }))
       .then((dataset) => {
         setValues(dataset.values)
-        return race(dataset.values, DEFAULT_RACERS)
+        return race(dataset.values, DEFAULT_ALGORITHMS)
       })
       .catch((cause: unknown) => setError(errorMessage(cause)))
   }, [race])

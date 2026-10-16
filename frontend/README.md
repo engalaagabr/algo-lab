@@ -16,6 +16,8 @@ The client is a single page with three sections:
   exact operation counts.
 - **Suite**: compares how work grows across input sizes and patterns.
 
+The three sections share one algorithm selection.
+
 The design is Graphite, in dark and light modes; the top bar switches between them.
 
 ## Run locally
