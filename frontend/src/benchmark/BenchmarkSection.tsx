@@ -84,10 +84,6 @@ export function BenchmarkSection({ algorithms, selected, onSelect }: BenchmarkSe
     <section className="section" aria-labelledby="benchmark-title">
       <header className="section__head">
         <h2 id="benchmark-title">Benchmark</h2>
-        <p>
-          Every algorithm sorts the same array {repeats} times. Times are measured on the server in Python and
-          describe this machine and this input only; animation speed in the race is not runtime.
-        </p>
       </header>
 
       <div className="controls">
