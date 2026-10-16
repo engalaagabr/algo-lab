@@ -4,14 +4,26 @@ AlgoLab is a modular monolith. Dependencies point inward:
 
 ```text
 presentation (FastAPI) -> application (use cases) -> domain (contracts/rules)
-infrastructure (clock/process runner) -> application ports
+infrastructure (clock/process runner/worker entry points) -> application
 algorithms (pure implementations) -> domain
-bootstrap / main -> wires concrete components together
+main (API composition root) -> wires HTTP components
+infrastructure.worker -> wires worker-local application dependencies
 ```
 
 The domain has no framework imports. Application services accept a registry and clock;
 HTTP, processes, configuration, and JSON conversion are outer details. There is no database
 abstraction until persistence is needed.
+
+At the repository root, keep the Python backend in `src/algolab/`, backend tests in `tests/`,
+and shared documentation in `docs/`. A future web client belongs in a separate root-level
+`frontend/` directory and communicates with the backend over HTTP; it should not import the
+Python package. This keeps frontend framework dependencies out of the backend layers.
+
+The FastAPI app factory in `main.py` composes the HTTP process. `infrastructure.executor`
+owns process-pool lifecycle and admission, while `infrastructure.worker` contains the
+picklable entry points run by the spawned child process and constructs that process's
+registry, service, and performance clock. This keeps the execution adapter from importing
+the application composition root and avoids creating worker dependencies in the API process.
 
 ## Algorithm contract
 

@@ -12,10 +12,12 @@ commits, checks, phase documentation, and merge into `dev`. `main` is reserved f
 | 4 | `feat/fastapi-endpoints` | Versioned API, validation, isolated CPU execution, OpenAPI |
 | 5 | `feat/integration-docs` | Integration verification, usage examples, deployment docs |
 | 6 | `feat/docker-compose` | Non-root API image, Compose service, health check, environment template |
+| 7 | `refactor/worker-composition` | Isolate process worker entry points from API composition |
 
-Phases 1–5 are complete. Phase 6 adds local container tooling. See the numbered reports under
-[phases](phases/) for changes and validation. The initial backend handover is documented in
-[phase 5](phases/05-integration.md).
+Phases 1–6 are complete. Phase 7 clarifies the process worker boundary. See the numbered
+reports under [phases](phases/) for changes and validation. The initial backend handover is documented in
+[phase 5](phases/05-integration.md); the latest architecture cleanup is in
+[phase 7](phases/07-worker-composition.md).
 
 ## Initial implementation choices
 
