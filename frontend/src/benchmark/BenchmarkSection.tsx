@@ -2,12 +2,10 @@ import { useState } from 'react'
 import { api, request, type AlgorithmMetadata, type BenchmarkResult } from '../api/client'
 import { BarChart, type BarRow } from '../charts/BarChart'
 import { compactNumber } from '../charts/scale'
-import { AlgorithmPicker } from '../shared/AlgorithmPicker'
 import { DatasetFields } from '../shared/DatasetFields'
 import { datasetBody, errorMessage, formatCount, formatDuration, type DatasetSettings } from '../shared/lab'
 
 const MAX_DATASET_SIZE = 10_000
-const MAX_ALGORITHMS = 10
 
 type Metric = 'time' | 'comparisons' | 'array_writes' | 'swaps'
 
@@ -21,10 +19,9 @@ const METRICS: { id: Metric; label: string }[] = [
 interface BenchmarkSectionProps {
   algorithms: AlgorithmMetadata[]
   selected: string[]
-  onSelect: (selected: string[]) => void
 }
 
-export function BenchmarkSection({ algorithms, selected, onSelect }: BenchmarkSectionProps) {
+export function BenchmarkSection({ algorithms, selected }: BenchmarkSectionProps) {
   const [settings, setSettings] = useState<DatasetSettings>({
     size: 500,
     minimum: 1,
@@ -98,13 +95,9 @@ export function BenchmarkSection({ algorithms, selected, onSelect }: BenchmarkSe
             <input type="number" min={0} max={3} value={warmups} onChange={(event) => setWarmups(Math.max(0, Math.min(3, Number(event.target.value) || 0)))} />
           </label>
         </div>
-        <AlgorithmPicker
-          algorithms={algorithms}
-          selected={selected}
-          onChange={onSelect}
-          max={MAX_ALGORITHMS}
-          inputSize={settings.size}
-        />
+        <p className="controls__hint">
+          Algorithms from Race: {selected.length ? selected.map(name).join(', ') : 'select at least one above'}
+        </p>
         <div className="controls__actions">
           {tooLarge.length > 0 && (
             <p className="controls__hint">Unselect {tooLarge.map(name).join(', ')} or use a smaller size.</p>
@@ -120,7 +113,7 @@ export function BenchmarkSection({ algorithms, selected, onSelect }: BenchmarkSe
           {error}
         </p>
       )}
-      {!result && !error && <p className="empty">{busy ? 'Measuring…' : 'Choose a dataset and algorithms, then run the benchmark.'}</p>}
+      {!result && !error && <p className="empty">{busy ? 'Measuring…' : 'Choose benchmark settings, then run the selected algorithms.'}</p>}
 
       {result && (
         <>
