@@ -76,9 +76,11 @@ export function RaceSection({ algorithms, selected: racers, onSelect: setRacers 
       </header>
       <div className="controls controls--race">
         <DatasetFields value={settings} onChange={setSettings} maxSize={MAX_TRACE_SIZE} sizeControl="slider" />
-        <div className="controls__wide">
+        <div className="controls__array">
           <span className="controls__heading">Array</span>
-          <p className="controls__values">{values.length ? values.join(', ') : 'No data yet'}</p>
+          <p className="controls__values" tabIndex={0} aria-label="Current array values">
+            {values.length ? values.join(', ') : 'No data yet'}
+          </p>
         </div>
         <AlgorithmSelection algorithms={algorithms} selected={racers} onChange={setRacers} max={MAX_RACERS} />
         <div className="controls__actions">
