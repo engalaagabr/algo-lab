@@ -43,8 +43,8 @@ export default function App() {
           </p>
         )}
         <RaceSection algorithms={algorithms} selected={selected} onSelect={setSelected} />
-        <BenchmarkSection algorithms={algorithms} selected={selected} />
-        <SuiteSection algorithms={algorithms} selected={selected} />
+        <BenchmarkSection algorithms={algorithms} selected={selected} onSelect={setSelected} />
+        <SuiteSection algorithms={algorithms} selected={selected} onSelect={setSelected} />
       </div>
     </div>
   )

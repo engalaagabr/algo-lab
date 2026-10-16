@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { api, request, type AlgorithmMetadata, type SortExperiment } from '../api/client'
+import { AlgorithmSelection } from '../shared/AlgorithmSelection'
 import { DatasetFields } from '../shared/DatasetFields'
 import { datasetBody, DEFAULT_ALGORITHMS, errorMessage, type DatasetSettings } from '../shared/lab'
 import { Theater } from './Theater'
@@ -67,9 +68,6 @@ export function RaceSection({ algorithms, selected: racers, onSelect: setRacers 
       .catch((cause: unknown) => setError(errorMessage(cause)))
   }, [race])
 
-  const name = (id: string) => algorithms.find((item) => item.id === id)?.name ?? id
-  const available = algorithms.filter((item) => !racers.includes(item.id))
-
   return (
     <section className="section section--race" aria-labelledby="race-title">
       <header className="section__head">
@@ -82,36 +80,7 @@ export function RaceSection({ algorithms, selected: racers, onSelect: setRacers 
           <span className="controls__heading">Array</span>
           <p className="controls__values">{values.length ? values.join(', ') : 'No data yet'}</p>
         </div>
-        <div className="controls__wide">
-          <span className="controls__heading">
-            Algorithms <small>up to {MAX_RACERS}</small>
-          </span>
-          <div className="racers">
-            {racers.map((id) => (
-              <span key={id} className="racer">
-                {name(id)}
-                <button type="button" aria-label={`Remove ${name(id)}`} onClick={() => setRacers(racers.filter((item) => item !== id))}>
-                  ×
-                </button>
-              </span>
-            ))}
-            {available.length > 0 && racers.length < MAX_RACERS && (
-              <select
-                className="racers__add"
-                value=""
-                aria-label="Add algorithm"
-                onChange={(event) => event.target.value && setRacers([...racers, event.target.value])}
-              >
-                <option value="">+ Add algorithm</option>
-                {available.map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.name}
-                  </option>
-                ))}
-              </select>
-            )}
-          </div>
-        </div>
+        <AlgorithmSelection algorithms={algorithms} selected={racers} onChange={setRacers} max={MAX_RACERS} />
         <div className="controls__actions">
           <button type="button" disabled={busy} onClick={generate}>
             New array
