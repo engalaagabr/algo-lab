@@ -1,7 +1,7 @@
 """Iterative three-way quicksort with deterministic median-of-three pivots."""
 
-from algolab.domain.models import AlgorithmMetadata, Complexity
-from algolab.domain.operations import SortContext
+from domain.models import AlgorithmMetadata, Complexity
+from domain.operations import SortContext
 
 metadata = AlgorithmMetadata(
     id="quick_sort",

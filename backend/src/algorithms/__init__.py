@@ -1,6 +1,9 @@
 """Concrete sorting algorithms wired through the domain registry."""
 
-from algolab.algorithms import (
+from domain.models import Algorithm
+from domain.registry import AlgorithmRegistry
+
+from . import (
     binary_insertion_sort,
     bubble_sort,
     cocktail_sort,
@@ -12,8 +15,6 @@ from algolab.algorithms import (
     selection_sort,
     shell_sort,
 )
-from algolab.domain.models import Algorithm
-from algolab.domain.registry import AlgorithmRegistry
 
 __all__ = ["build_registry"]
 

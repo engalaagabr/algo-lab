@@ -1,9 +1,9 @@
 import pytest
 
-from algolab.domain.errors import TraceLimitExceeded, UnknownAlgorithm
-from algolab.domain.models import Algorithm, AlgorithmMetadata, Complexity
-from algolab.domain.operations import SortContext
-from algolab.domain.registry import AlgorithmRegistry
+from domain.errors import TraceLimitExceeded, UnknownAlgorithm
+from domain.models import Algorithm, AlgorithmMetadata, Complexity
+from domain.operations import SortContext
+from domain.registry import AlgorithmRegistry
 
 
 def test_metrics_and_replay_semantics():

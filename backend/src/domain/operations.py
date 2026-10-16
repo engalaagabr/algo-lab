@@ -1,7 +1,7 @@
 from typing import Literal
 
-from algolab.domain.errors import TraceLimitExceeded
-from algolab.domain.models import Metrics, SortEvent
+from domain.errors import TraceLimitExceeded
+from domain.models import Metrics, SortEvent
 
 
 class SortContext:

@@ -1,7 +1,7 @@
 """Shell sort using n // 2, n // 4, ..., 1 gaps."""
 
-from algolab.domain.models import AlgorithmMetadata, Complexity
-from algolab.domain.operations import SortContext
+from domain.models import AlgorithmMetadata, Complexity
+from domain.operations import SortContext
 
 metadata = AlgorithmMetadata(
     id="shell_sort",

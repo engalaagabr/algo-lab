@@ -2,9 +2,9 @@ from typing import Annotated, cast
 
 from fastapi import APIRouter, Depends, Request
 
-from algolab.application.datasets import generate_dataset
-from algolab.application.execution import ExecutionRunner
-from algolab.application.models import (
+from application.datasets import generate_dataset
+from application.execution import ExecutionRunner
+from application.models import (
     BenchmarkResult,
     BenchmarkSuiteResult,
     DatasetResult,
@@ -12,9 +12,9 @@ from algolab.application.models import (
     SortExperiment,
     SuiteSpec,
 )
-from algolab.domain.models import AlgorithmMetadata
-from algolab.domain.registry import AlgorithmRegistry
-from algolab.presentation.schemas import (
+from domain.models import AlgorithmMetadata
+from domain.registry import AlgorithmRegistry
+from presentation.schemas import (
     BenchmarkRequest,
     DatasetRequest,
     ErrorResponse,

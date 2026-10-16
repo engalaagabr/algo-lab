@@ -1,14 +1,14 @@
 """Picklable process-pool entry points and their per-job service composition."""
 
-from algolab.algorithms import build_registry
-from algolab.application.models import (
+from algorithms import build_registry
+from application.models import (
     BenchmarkResult,
     BenchmarkSuiteResult,
     SortExperiment,
     SuiteSpec,
 )
-from algolab.application.services import ExperimentService
-from algolab.infrastructure.clock import PerformanceClock
+from application.services import ExperimentService
+from infrastructure.clock import PerformanceClock
 
 
 def _build_service() -> ExperimentService:

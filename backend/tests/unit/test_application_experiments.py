@@ -4,18 +4,18 @@ from random import Random
 
 import pytest
 
-from algolab.application.models import SuiteSpec
-from algolab.application.services import ExperimentService
-from algolab.domain.errors import (
+from application.models import SuiteSpec
+from application.services import ExperimentService
+from domain.errors import (
     DomainError,
     InvalidResult,
     LimitExceeded,
     TraceLimitExceeded,
     UnknownAlgorithm,
 )
-from algolab.domain.models import Algorithm, AlgorithmMetadata, Complexity
-from algolab.domain.operations import SortContext
-from algolab.domain.registry import AlgorithmRegistry
+from domain.models import Algorithm, AlgorithmMetadata, Complexity
+from domain.operations import SortContext
+from domain.registry import AlgorithmRegistry
 
 
 class FakeClock:

@@ -8,15 +8,15 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from algolab import __version__
-from algolab.algorithms import build_registry
-from algolab.application.execution import ExecutionBusy, ExecutionRunner, ExecutionUnavailable
-from algolab.domain.errors import DomainError, InvalidResult, UnknownAlgorithm
-from algolab.infrastructure.executor import ProcessExecutionRunner
-from algolab.presentation.middleware import RequestBodyLimit
-from algolab.presentation.routes import router
+from algorithms import build_registry
+from application.execution import ExecutionBusy, ExecutionRunner, ExecutionUnavailable
+from domain.errors import DomainError, InvalidResult, UnknownAlgorithm
+from infrastructure.executor import ProcessExecutionRunner
+from presentation.middleware import RequestBodyLimit
+from presentation.routes import router
 
 logger = logging.getLogger(__name__)
+__version__ = "0.1.0"
 
 
 def error_response(status: int, code: str, message: str) -> JSONResponse:

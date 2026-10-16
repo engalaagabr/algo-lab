@@ -2,7 +2,7 @@
 
 from typing import Protocol
 
-from algolab.application.models import (
+from application.models import (
     BenchmarkResult,
     BenchmarkSuiteResult,
     SortExperiment,

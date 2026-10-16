@@ -7,25 +7,23 @@ from pathlib import Path
 
 import pytest
 
-import algolab
-
 
 @pytest.mark.parametrize(
     "layer,allowed_packages",
     [
-        ("domain", ("algolab.domain",)),
-        ("application", ("algolab.application", "algolab.domain")),
-        ("algorithms", ("algolab.algorithms", "algolab.domain")),
+        ("domain", ("domain",)),
+        ("application", ("application", "domain")),
+        ("algorithms", ("algorithms", "domain")),
     ],
 )
 def test_inner_layers_only_import_standard_library_and_inward_packages(
     layer: str,
     allowed_packages: tuple[str, ...],
 ) -> None:
-    root = Path(algolab.__file__).resolve().parent
+    root = Path(__file__).resolve().parents[2] / "src"
     violations: list[str] = []
     for source in (root / layer).rglob("*.py"):
-        package = ".".join(("algolab", *source.parent.relative_to(root).parts))
+        package = ".".join(source.parent.relative_to(root).parts)
         for node in ast.walk(ast.parse(source.read_text(), filename=str(source))):
             imported: list[str] = []
             if isinstance(node, ast.Import):

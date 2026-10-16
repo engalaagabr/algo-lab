@@ -1,6 +1,6 @@
 import asyncio
 
-from algolab.presentation.middleware import RequestBodyLimit
+from presentation.middleware import RequestBodyLimit
 
 
 def test_chunked_body_over_limit_is_rejected_before_application():

@@ -6,10 +6,10 @@ from random import Random
 
 import pytest
 
-from algolab.algorithms import build_registry
-from algolab.domain.errors import LimitExceeded, TraceLimitExceeded
-from algolab.domain.models import Metrics, SortEvent
-from algolab.domain.operations import SortContext
+from algorithms import build_registry
+from domain.errors import LimitExceeded, TraceLimitExceeded
+from domain.models import Metrics, SortEvent
+from domain.operations import SortContext
 
 ALGORITHM_IDS = (
     "selection_sort",

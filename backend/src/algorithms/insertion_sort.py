@@ -1,7 +1,7 @@
 """Stable insertion sort using shifts."""
 
-from algolab.domain.models import AlgorithmMetadata, Complexity
-from algolab.domain.operations import SortContext
+from domain.models import AlgorithmMetadata, Complexity
+from domain.operations import SortContext
 
 metadata: AlgorithmMetadata = AlgorithmMetadata(
     id="insertion_sort",

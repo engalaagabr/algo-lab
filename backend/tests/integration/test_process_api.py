@@ -1,6 +1,6 @@
 from fastapi.testclient import TestClient
 
-from algolab.main import create_app
+from main import create_app
 
 
 def test_real_process_worker_runs_all_experiment_endpoints_and_preserves_errors():

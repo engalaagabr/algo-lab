@@ -1,7 +1,7 @@
 """Bottom-up binary max-heap sort with early-stopping sift-down."""
 
-from algolab.domain.models import AlgorithmMetadata, Complexity
-from algolab.domain.operations import SortContext
+from domain.models import AlgorithmMetadata, Complexity
+from domain.operations import SortContext
 
 metadata = AlgorithmMetadata(
     id="heap_sort",

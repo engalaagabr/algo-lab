@@ -1,7 +1,7 @@
 from random import Random, SystemRandom
 
-from algolab.application.models import DatasetResult, DatasetSpec
-from algolab.application.validation import (
+from application.models import DatasetResult, DatasetSpec
+from application.validation import (
     MAX_DATASET_SIZE,
     MAX_SEED,
     require_integer,

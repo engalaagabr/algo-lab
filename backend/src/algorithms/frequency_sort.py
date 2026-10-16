@@ -1,8 +1,8 @@
 """Ascending integer counting sort, not ordering values by their frequency."""
 
-from algolab.domain.errors import LimitExceeded
-from algolab.domain.models import AlgorithmMetadata, Complexity
-from algolab.domain.operations import SortContext
+from domain.errors import LimitExceeded
+from domain.models import AlgorithmMetadata, Complexity
+from domain.operations import SortContext
 
 MAX_VALUE_RANGE = 100_000
 

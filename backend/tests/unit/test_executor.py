@@ -4,8 +4,8 @@ from concurrent.futures.process import BrokenProcessPool
 
 import pytest
 
-from algolab.application.execution import ExecutionBusy, ExecutionUnavailable
-from algolab.infrastructure import executor
+from application.execution import ExecutionBusy, ExecutionUnavailable
+from infrastructure import executor
 
 
 class ControlledPool:

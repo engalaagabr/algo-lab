@@ -1,4 +1,4 @@
-from algolab.domain.errors import DomainError, LimitExceeded
+from domain.errors import DomainError, LimitExceeded
 
 MAX_DATASET_SIZE = 10_000
 MAX_INTEGER_MAGNITUDE = 1_000_000_000
