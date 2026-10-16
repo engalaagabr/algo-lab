@@ -137,26 +137,37 @@ body {
 }
 
 .topbar__mark {
-  height: 26px;
-  display: flex;
-  align-items: end;
-  gap: 3px;
-  padding: 4px;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
   border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--line));
   border-radius: 8px;
   background: color-mix(in srgb, var(--accent) 8%, var(--panel));
 }
 
-.topbar__mark i {
-  width: 4px;
-  border-radius: 3px 3px 1px 1px;
-  background: var(--accent);
+.topbar__mark-icon {
+  width: 27px;
+  height: 27px;
 }
 
-.topbar__mark i:nth-child(1) { height: 7px; opacity: 0.55; }
-.topbar__mark i:nth-child(2) { height: 12px; opacity: 0.72; }
-.topbar__mark i:nth-child(3) { height: 16px; opacity: 0.86; }
-.topbar__mark i:nth-child(4) { height: 20px; }
+.topbar__mark-edges {
+  fill: none;
+  stroke: var(--muted);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.topbar__mark-node {
+  stroke: var(--panel);
+  stroke-width: 1.2;
+}
+
+.topbar__mark-node--lime { fill: var(--accent); }
+.topbar__mark-node--blue { fill: var(--write); }
+.topbar__mark-node--mint { fill: var(--bar-done); }
+.topbar__mark-node--rose { fill: var(--swap); }
 
 .topbar__brand {
   font-weight: 750;

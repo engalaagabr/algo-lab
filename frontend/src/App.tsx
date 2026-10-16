@@ -32,10 +32,14 @@ export default function App() {
       <header className="topbar">
         <div className="topbar__identity">
           <span className="topbar__mark" aria-hidden="true">
-            <i />
-            <i />
-            <i />
-            <i />
+            <svg viewBox="0 0 32 32" className="topbar__mark-icon">
+              <path className="topbar__mark-edges" d="M7 9 16 6l9 5M7 9l6 14 12-3M16 6l-3 17m3-17 9 14M7 9l18 2" />
+              <circle cx="7" cy="9" r="3" className="topbar__mark-node topbar__mark-node--lime" />
+              <circle cx="16" cy="6" r="3" className="topbar__mark-node topbar__mark-node--blue" />
+              <circle cx="25" cy="11" r="3" className="topbar__mark-node topbar__mark-node--mint" />
+              <circle cx="13" cy="23" r="3" className="topbar__mark-node topbar__mark-node--rose" />
+              <circle cx="25" cy="20" r="3" className="topbar__mark-node topbar__mark-node--lime" />
+            </svg>
           </span>
           <span className="topbar__brand">Algo<span>Lab</span></span>
           <span className="topbar__tagline">ALGORITHM LAB</span>
