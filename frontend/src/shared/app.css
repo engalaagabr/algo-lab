@@ -1,0 +1,539 @@
+/*
+ * Structure shared by every design direction. Colours, fonts and bar materials come from the
+ * tokens below; each theme in themes.css overrides tokens and a few signature rules.
+ */
+.app {
+  --ground: #f3f4f6;
+  --panel: #ffffff;
+  --ink: #16181d;
+  --muted: #5d6470;
+  --line: #d7dbe1;
+  --topbar-bg: #ffffff;
+  --topbar-ink: #16181d;
+  --topbar-muted: #5d6470;
+  --accent: #16181d;
+  --accent-ink: #ffffff;
+  --bar-fill: #9aa3b0;
+  --bar-done: #2f8f5b;
+  --compare: #e0a100;
+  --compare-ink: #16181d;
+  --compare-fill: var(--compare);
+  --swap: #2f6db5;
+  --swap-ink: #ffffff;
+  --swap-fill: var(--swap);
+  --write: #2f8f5b;
+  --write-ink: #ffffff;
+  --write-fill: var(--write);
+  --op-outline: var(--ink);
+  --font-ui: system-ui, sans-serif;
+  --font-num: ui-monospace, monospace;
+  --font-narration: var(--font-ui);
+  --radius: 0px;
+  --gap: 14px;
+
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  grid-template-rows: auto auto 1fr;
+  grid-template-areas:
+    'top top'
+    'error error'
+    'setup stage';
+  min-height: 100vh;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--font-ui);
+}
+
+body {
+  margin: 0;
+}
+
+/* Each page contributes the setup rail and stage straight into the app grid. */
+.page {
+  display: contents;
+}
+
+.page[hidden] {
+  display: none;
+}
+
+.app__error {
+  grid-area: error;
+  margin: 12px 20px 0;
+}
+
+.app button,
+.app input,
+.app select {
+  font: inherit;
+  color: inherit;
+}
+
+.app button {
+  border: 1px solid var(--ink);
+  border-radius: var(--radius);
+  background: var(--panel);
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.app button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+
+.app button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.app :focus-visible {
+  outline: 3px solid var(--swap);
+  outline-offset: 2px;
+}
+
+/* Top bar */
+.topbar {
+  grid-area: top;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding: 10px 20px;
+  background: var(--topbar-bg);
+  color: var(--topbar-ink);
+  border-bottom: 1px solid var(--line);
+}
+
+.topbar__brand {
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.topbar__nav {
+  display: flex;
+  gap: 4px;
+}
+
+.topbar__nav a {
+  padding: 6px 10px;
+  font-size: 14px;
+  color: var(--topbar-muted);
+  border-radius: var(--radius);
+}
+
+.topbar__nav a[aria-current='page'] {
+  color: var(--topbar-ink);
+  font-weight: 600;
+  box-shadow: inset 0 -2px 0 currentColor;
+}
+
+.topbar__nav a {
+  text-decoration: none;
+}
+
+.topbar__theme {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--topbar-muted);
+}
+
+.topbar__theme select {
+  background: var(--panel);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 4px 6px;
+}
+
+/* Setup rail */
+.setup {
+  grid-area: setup;
+  background: var(--panel);
+  border-right: 1px solid var(--line);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.setup h2 {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 8px 0 0;
+}
+
+.setup h2 small {
+  text-transform: none;
+  color: var(--muted);
+  letter-spacing: 0;
+  font-weight: 400;
+}
+
+.setup label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.setup input,
+.setup select {
+  min-width: 0;
+  padding: 5px 6px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+  color: var(--ink);
+}
+
+.setup__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 8px;
+}
+
+.setup__row input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.setup__values {
+  font: 12px var(--font-num);
+  color: var(--muted);
+  margin: 0;
+  max-height: 72px;
+  overflow: auto;
+  overflow-wrap: anywhere;
+}
+
+.setup__algorithms {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.setup__algorithms label {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink);
+  font-size: 14px;
+  padding: 3px 0;
+}
+
+/* Stage */
+.stage {
+  grid-area: stage;
+  min-width: 0;
+  padding: 16px 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.legend .tag:not(:first-child) {
+  margin-left: 10px;
+}
+
+.tag {
+  display: inline-block;
+  font: 600 11px var(--font-num);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 2px 6px;
+  border-radius: var(--radius);
+}
+
+.tag--compare {
+  background: var(--compare);
+  color: var(--compare-ink);
+}
+
+.tag--swap {
+  background: var(--swap);
+  color: var(--swap-ink);
+}
+
+.tag--write {
+  background: var(--write);
+  color: var(--write-ink);
+}
+
+/* Lane */
+.lane {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  min-width: 0;
+}
+
+.lane__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+}
+
+.lane__head h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.lane__complexity {
+  color: var(--muted);
+  font-size: 13px;
+  font-family: var(--font-num);
+}
+
+.lane__status {
+  margin-left: auto;
+  font: 13px var(--font-num);
+  white-space: nowrap;
+}
+
+.lane--done .lane__status {
+  color: var(--bar-done);
+  font-weight: 700;
+}
+
+.lane__stage {
+  position: relative;
+  height: 220px;
+  margin: 12px 0 0;
+}
+
+.lane__stage--values {
+  margin-top: 26px;
+}
+
+.lane__stage--values.lane__stage--negative {
+  margin-bottom: 20px;
+}
+
+.lane__zero {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: var(--zero);
+  border-top: 1px solid var(--ink);
+}
+
+.bar {
+  position: absolute;
+  transition:
+    left var(--duration) ease-in-out,
+    top var(--duration) ease-in-out,
+    height var(--duration) ease-in-out;
+}
+
+.bar__fill {
+  position: absolute;
+  inset: 0 12%;
+  background: var(--bar-fill);
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+
+.bar--neg .bar__fill {
+  border-radius: 0 0 var(--radius) var(--radius);
+}
+
+.lane--done .bar__fill {
+  background: var(--bar-done);
+}
+
+/* Kinds differ by outline style as well as colour so they survive a washed-out projector. */
+.bar--compare .bar__fill {
+  background: var(--compare-fill);
+  outline: 3px dashed var(--op-outline);
+}
+
+.bar--swap .bar__fill {
+  background: var(--swap-fill);
+  outline: 3px solid var(--op-outline);
+}
+
+.bar--write .bar__fill {
+  background: var(--write-fill);
+  outline: 3px dotted var(--op-outline);
+}
+
+.bar__value {
+  position: absolute;
+  left: -4px;
+  right: -4px;
+  bottom: 100%;
+  margin-bottom: 3px;
+  text-align: center;
+  font: 11px var(--font-num);
+  white-space: nowrap;
+}
+
+.bar--neg .bar__value {
+  bottom: auto;
+  top: 100%;
+  margin: 3px 0 0;
+}
+
+.lane__indices {
+  display: flex;
+  margin-top: 4px;
+  font: 10px var(--font-num);
+  color: var(--muted);
+}
+
+.lane__indices span {
+  flex: 1;
+  text-align: center;
+}
+
+.lane__indices .is-active {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.lane__narration {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  margin: 14px 0 8px;
+  font-family: var(--font-narration);
+  font-size: 16px;
+  min-height: 26px;
+}
+
+.lane__held {
+  font: 12px var(--font-num);
+  border: 1px dashed var(--compare);
+  padding: 1px 6px;
+  border-radius: var(--radius);
+}
+
+.lane__metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 28px;
+  margin: 0;
+  font-size: 13px;
+}
+
+.lane__metrics dt {
+  color: var(--muted);
+}
+
+.lane__metrics dd {
+  margin: 0;
+  font: 600 16px var(--font-num);
+}
+
+.lane__metrics small {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+/* Transport sticks to the bottom of the stage so it never covers the setup rail. */
+.transport {
+  position: sticky;
+  bottom: 0;
+  margin: 0 -20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: var(--panel);
+  border-top: 1px solid var(--line);
+}
+
+.transport__scrub {
+  flex: 1 1 160px;
+  min-width: 120px;
+  accent-color: var(--accent);
+}
+
+.transport__pos {
+  font: 13px var(--font-num);
+  min-width: 80px;
+  text-align: right;
+}
+
+.transport__speed {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+}
+
+.transport__speed select {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.error {
+  border: 2px solid #b3261e;
+  background: #fdecea;
+  color: #5c1410;
+  padding: 10px 12px;
+  margin: 0;
+}
+
+.empty {
+  color: var(--muted);
+}
+
+/* Narrow screens: setup moves above the stage. */
+@media (max-width: 900px) {
+  .app {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'top'
+      'error'
+      'setup'
+      'stage';
+  }
+
+  .setup {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .setup__algorithms {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+
+  .topbar {
+    flex-wrap: wrap;
+    gap: 8px 16px;
+  }
+
+  .stage {
+    padding: 12px 12px 0;
+  }
+
+  .transport {
+    margin: 0 -12px;
+    padding: 10px 12px;
+  }
+
+  .lane__stage {
+    height: 160px;
+  }
+}
