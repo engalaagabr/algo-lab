@@ -39,3 +39,4 @@ a universally fastest algorithm.
 - [Algorithms](docs/ALGORITHMS.md)
 - [Benchmarking](docs/BENCHMARKING.md)
 - [Contributing](CONTRIBUTING.md)
+- [Frontend-to-algorithm flow (Arabic)](docs/FRONTEND-FLOW-AR.md)
