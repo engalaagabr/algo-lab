@@ -1,0 +1,12 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environmentName": { "value": "algolab-dev-cdbf" },
+    "location": { "value": "uaenorth" },
+    "sessionId": { "value": "cdbffd9d-3af8-457d-9148-c477c5e2e120" },
+    "deployedBy": { "value": "Alaa Gabr" },
+    "createdAt": { "value": "2026-10-16T23:16:38+03:00" },
+    "deployerObjectId": { "value": "REPLACE_WITH_DEPLOYER_OBJECT_ID" }
+  }
+}
