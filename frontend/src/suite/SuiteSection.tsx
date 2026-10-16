@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { api, request, type AlgorithmMetadata, type BenchmarkSuiteResult } from '../api/client'
 import { compactNumber } from '../charts/scale'
 import { LineChart, type LineSeries } from '../charts/LineChart'
+import { SelectedAlgorithms } from '../shared/SelectedAlgorithms'
 import { DISTRIBUTIONS, distributionLabel, errorMessage, formatCount, formatDuration, integerText, type Distribution } from '../shared/lab'
 
 const SIZE_PRESETS = [10, 25, 50, 100, 250, 500, 1000]
@@ -159,9 +160,7 @@ export function SuiteSection({ algorithms, selected }: SuiteSectionProps) {
           Repeats
           <input type="number" min={1} max={15} value={repeats} onChange={(event) => setRepeats(Math.max(1, Math.min(15, Number(event.target.value) || 1)))} />
         </label>
-        <p className="controls__hint">
-          Algorithms from Race: {selected.length ? selected.map(name).join(', ') : 'select at least one above'}
-        </p>
+        <SelectedAlgorithms algorithms={algorithms} selected={selected} />
         <div className="controls__actions">
           {cases > MAX_CASES && <p className="controls__hint">Pick at most {MAX_CASES} size × pattern combinations.</p>}
           {tooLarge.length > 0 && (

@@ -3,6 +3,7 @@ import { api, request, type AlgorithmMetadata, type BenchmarkResult } from '../a
 import { BarChart, type BarRow } from '../charts/BarChart'
 import { compactNumber } from '../charts/scale'
 import { DatasetFields } from '../shared/DatasetFields'
+import { SelectedAlgorithms } from '../shared/SelectedAlgorithms'
 import { datasetBody, errorMessage, formatCount, formatDuration, type DatasetSettings } from '../shared/lab'
 
 const MAX_DATASET_SIZE = 10_000
@@ -95,9 +96,7 @@ export function BenchmarkSection({ algorithms, selected }: BenchmarkSectionProps
             <input type="number" min={0} max={3} value={warmups} onChange={(event) => setWarmups(Math.max(0, Math.min(3, Number(event.target.value) || 0)))} />
           </label>
         </div>
-        <p className="controls__hint">
-          Algorithms from Race: {selected.length ? selected.map(name).join(', ') : 'select at least one above'}
-        </p>
+        <SelectedAlgorithms algorithms={algorithms} selected={selected} />
         <div className="controls__actions">
           {tooLarge.length > 0 && (
             <p className="controls__hint">Unselect {tooLarge.map(name).join(', ')} or use a smaller size.</p>
