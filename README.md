@@ -37,6 +37,67 @@ active today; the other tabs are placeholders, not working features yet.
 - **Dynamic Programming:** Fibonacci, Knapsack, and Longest Common Subsequence with a step-by-step table.
 - **Backtracking:** maze solving and N-Queens with visible choices and backtracks.
 
+## Architecture
+
+The repository keeps the React/Vite frontend and FastAPI backend as separate applications.
+The API is a modular monolith: HTTP routes call application use cases, which rely on domain
+contracts and registered algorithm implementations. Infrastructure adapters handle process
+execution and runtime concerns. The frontend talks to the API over HTTP and does not import
+backend code.
+
+```mermaid
+flowchart LR
+    visitor[Visitor browser]
+
+    subgraph Runtime[Azure Container Apps]
+        web[Public Web Container App<br/>React/Vite served by Nginx]
+        api[Internal API Container App<br/>FastAPI]
+        presentation[Presentation<br/>HTTP routes and schemas]
+        application[Application<br/>use cases and benchmarking]
+        domain[Domain<br/>contracts and rules]
+        algorithms[Algorithms<br/>sorting implementations]
+        infrastructure[Infrastructure<br/>process runner and workers]
+
+        web -->|same-origin /api proxy| api
+        api --> presentation
+        presentation --> application
+        application --> domain
+        algorithms --> domain
+        infrastructure --> application
+    end
+
+    subgraph Delivery[GitHub Actions]
+        pr[Pull request to dev or main]
+        main[Push or merge to main]
+        checks[Backend tests and lint<br/>Frontend typecheck, tests, lint, build]
+        oidc[Sign in to Azure with OIDC]
+        build[Build images tagged with commit SHA]
+        deploy[Update Container Apps revisions]
+
+        pr --> checks
+        main --> checks
+        checks -->|main only| oidc
+        oidc --> build
+        build --> registry[(Azure Container Registry)]
+        registry --> deploy
+    end
+
+    visitor -->|HTTPS| web
+    deploy -. updates .-> web
+    deploy -. updates .-> api
+    registry -. managed identity pulls .-> web
+    registry -. managed identity pulls .-> api
+```
+
+Pull requests run checks without deploying. A successful push to `main` builds and publishes
+the API and web images, then updates the existing Azure Container Apps. The current Azure
+configuration uses a public web app and a private API behind the Nginx proxy. GitHub Actions
+authenticates with Azure through OIDC; it does not store a long-lived Azure client secret.
+
+The deployment workflow updates provisioned resources; it does not create Azure infrastructure.
+See the [Azure CI/CD setup guide](docs/GITHUB-AZURE-CICD.md) for the one-time setup and
+[manual infrastructure guide](infra/DEPLOY-MANUALLY.md) for first-time provisioning.
+
 ## Run the full stack with Docker
 
 Requires Docker Engine and the Docker Compose plugin.
@@ -77,5 +138,6 @@ Read the [API guide](docs/API.md) for request schemas, responses, and limits.
 - [Benchmark interpretation](docs/BENCHMARKING.md)
 - [Running locally and with Docker](docs/RUNNING.md)
 - [GitHub Actions and Azure deployment](docs/GITHUB-AZURE-CICD.md)
+- [دليل Azure والنشر إلى production (عربي)](docs/AZURE-DEPLOYMENT-AR.md)
 - [Contributing](CONTRIBUTING.md)
 - [Frontend-to-algorithm flow (Arabic)](docs/FRONTEND-FLOW-AR.md)
