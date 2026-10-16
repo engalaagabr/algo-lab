@@ -186,8 +186,6 @@ export function SuiteSection({ algorithms, selected, onSelect }: SuiteSectionPro
           {error}
         </p>
       )}
-      {!result && !error && <p className="empty">{busy ? 'Running suite…' : 'Choose sizes and patterns, then run the selected algorithms.'}</p>}
-
       {result && ranWith && (
         <>
           <div className="segmented" role="tablist" aria-label="Measure">

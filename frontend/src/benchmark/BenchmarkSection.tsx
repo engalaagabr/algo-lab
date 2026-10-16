@@ -114,8 +114,6 @@ export function BenchmarkSection({ algorithms, selected, onSelect }: BenchmarkSe
           {error}
         </p>
       )}
-      {!result && !error && <p className="empty">{busy ? 'Measuring…' : 'Choose benchmark settings, then run the selected algorithms.'}</p>}
-
       {result && (
         <>
           <div className="summary">
