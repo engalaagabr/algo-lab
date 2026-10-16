@@ -1,78 +1,54 @@
-# Contributing
+# Contributing to AlgoLab
 
-AlgoLab uses `dev` as the shared integration branch. Keep `main` for complete releases.
-The project team collaborates in the same GitHub repository: repository owners add team
-members as collaborators with write access. Use a fork and a pull request from the fork only
-when a contributor does not have write access.
+We work together in the same GitHub repository. Ask the repository owner to add you as a
+collaborator if you do not have access yet. If you cannot push branches to the repository,
+use a fork and open your pull request from there.
 
-## Branch workflow
+## Add a feature or fix
 
-Create each feature, fix, or documentation branch from the latest `dev`. Keep branches
-focused and short-lived. Make small, coherent commits as work progresses, and add or update
-tests and documentation with the change.
+Every change gets its own branch, created from the latest `dev`:
 
 ```bash
-git fetch origin
 git switch dev
 git pull --ff-only origin dev
-git switch -c feat/my-task
+git switch -c feat/short-task-name
+```
 
-# Implement the change, document its phase, and run the required checks.
-git add <specific-paths>
+Make your changes, then commit and push the branch:
+
+```bash
+git add <files-you-changed>
 git commit -m "feat: describe the change"
-git push -u origin feat/my-task
+git push -u origin feat/short-task-name
 ```
 
-Open a pull request on GitHub from `feat/my-task` to the repository's `dev` branch. Describe
-the behavior that changed, the checks you ran, and any limits or follow-up work. A teammate
-reviews the pull request; address review comments with additional commits on the same branch.
-After approval and passing checks, merge the pull request into `dev` using GitHub's **Create
-a merge commit** option. This preserves the feature branch history and is the GitHub
-equivalent of `git merge --no-ff`.
+On GitHub, open a pull request with:
 
-Once the pull request is merged, update local `dev` before starting the next task:
+- **Base:** `dev`
+- **Compare:** `feat/short-task-name`
+
+Explain what changed and what checks you ran. A teammate reviews the pull request. Make any
+requested updates on the same branch, then push again. Once it is approved, merge it using
+**Create a merge commit**.
+
+After the merge, update your local `dev` before starting another task:
 
 ```bash
 git switch dev
 git pull --ff-only origin dev
-git branch -d feat/my-task
 ```
 
-Do not merge daily work directly into `main`. When `dev` contains a complete release, promote
-it to `main` through a reviewed release pull request. If an urgent fix must go directly to
-`main`, merge that fix back into `dev` too.
+## Keep in mind
 
-For contributors with write access who need to merge locally instead of through a pull
-request, update `dev`, merge with `--no-ff`, and push it:
+- Do not push directly to `dev` or `main`; use a pull request to `dev`.
+- `main` is for completed releases. A release is merged from `dev` to `main`.
+- Keep commits small and focused. Include useful tests and update documentation when needed.
+- Coordinate first if someone else is changing the same files or shared API contracts.
+- Do not commit `.env` or the ignored local `local-ui/` folder. `.env.example` is safe to update.
+- Domain and application code must not depend on FastAPI or Pydantic.
+- Benchmark tests should not assume fixed runtimes or a universally fastest algorithm.
 
-```bash
-git switch dev
-git pull --ff-only origin dev
-git merge --no-ff feat/my-task
-git push origin dev
-```
-
-Prefer the pull request workflow so review, checks, and the merge record are visible together.
-
-## Parallel work
-
-Before starting, agree on ownership when two tasks need to change the same files or shared
-contracts. Each contributor should work on their own branch; avoid sharing a checked-out
-feature branch. If a task depends on another unmerged change, coordinate with its author or
-wait for its pull request to reach `dev` before building on it.
-
-## Project boundaries
-
-- Algorithm authors own the implementation, complexity metadata, and correctness tests.
-- API request and response models belong at the presentation boundary.
-- Domain and application modules must not import FastAPI or Pydantic.
-- Never assert machine-specific timing thresholds or claim an algorithm is universally fastest.
-- The local playground under `local-ui/` is ignored by Git; do not force-add or include it in
-  commits or pull requests unless the project owner changes that instruction.
-
-## Required checks
-
-Run these checks before requesting review:
+Before opening a pull request, run the checks available in your development environment:
 
 ```bash
 ruff check .
@@ -80,5 +56,3 @@ ruff format --check .
 mypy
 pytest
 ```
-
-Record the phase's changes, validation, and limitations in the relevant project documentation.
