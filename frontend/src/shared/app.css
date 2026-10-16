@@ -3,22 +3,23 @@
  * light modes redefine the same tokens; every layout rule below is shared.
  */
 .app {
-  --ground: #1e1f20;
-  --panel: #24282d;
-  --raised: #2b3037;
-  --line: #393f47;
-  --ink: #f1f3f5;
-  --muted: #9aa2ad;
-  --accent: #c8f238;
+  --ground: #101113;
+  --panel: #22262b;
+  --raised: #2c3139;
+  --line: #343a42;
+  --ink: #f2f4f6;
+  --muted: #929aa6;
+  --accent: #c9f33b;
   --accent-ink: #20221a;
-  --bar-fill: #3a4048;
-  --bar-done: #75efc2;
+  --bar-fill: #2b3038;
+  --bar-done: #68e9bf;
+  --chart-surface: #0b0d10;
   /* Tracing colours: one per event kind, none shared with the sorted state. */
-  --compare: #c8f238;
+  --compare: #c9f33b;
   --compare-ink: #20221a;
-  --swap: #ffb4bb;
+  --swap: #ffabb7;
   --swap-ink: #292024;
-  --write: #78baff;
+  --write: #72b8ff;
   --write-ink: #172333;
   --op-outline: #f1f3f5;
   --error-line: #ff9da8;
@@ -38,7 +39,7 @@
 }
 
 .app[data-mode='light'] {
-  --ground: #f4f5f1;
+  --ground: #f3f4f2;
   --panel: #ffffff;
   --raised: #f6f7f3;
   --line: #d9ddd4;
@@ -48,6 +49,7 @@
   --accent-ink: #1e2117;
   --bar-fill: #b8beb5;
   --bar-done: #188a67;
+  --chart-surface: #fbfcfa;
   --compare: #91b51e;
   --compare-ink: #16181d;
   --swap: #d75c68;
@@ -621,6 +623,7 @@ body {
   position: relative;
   height: 170px;
   margin: 12px 0 0;
+  background: var(--chart-surface);
 }
 
 .lane__stage--values {

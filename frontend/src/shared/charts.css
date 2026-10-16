@@ -1,9 +1,9 @@
 /* Charts and section furniture; colours come from the mode tokens in app.css. */
 .app {
   /* Reference palette: blue, rose, and lime; line patterns distinguish the latter two as well. */
-  --series-1: #78baff;
-  --series-2: #ffb4bb;
-  --series-3: #c8f238;
+  --series-1: #72b8ff;
+  --series-2: #ffabb7;
+  --series-3: #c9f33b;
   --chart-grid: color-mix(in srgb, var(--ink) 12%, transparent);
   --surface-ring: var(--panel);
 }
@@ -136,7 +136,7 @@
 /* Chart shell */
 .chart {
   margin: 0;
-  background: var(--panel);
+  background: var(--chart-surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: 14px 16px;
