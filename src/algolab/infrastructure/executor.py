@@ -13,25 +13,9 @@ from algolab.application.models import (
     SortExperiment,
     SuiteSpec,
 )
-from algolab.bootstrap import build_service
+from algolab.infrastructure.worker import run_benchmark_job, run_sort_job, run_suite_job
 
 T = TypeVar("T")
-
-
-def _sort(values: list[int], algorithm_ids: list[str], trace: bool) -> SortExperiment:
-    return build_service().sort(values, algorithm_ids, trace=trace)
-
-
-def _benchmark(
-    values: list[int], algorithm_ids: list[str], repeats: int, warmups: int, seed: int | None
-) -> BenchmarkResult:
-    return build_service().benchmark(
-        values, algorithm_ids, repeats=repeats, warmups=warmups, seed=seed
-    )
-
-
-def _suite(spec: SuiteSpec) -> BenchmarkSuiteResult:
-    return build_service().suite(spec)
 
 
 class ProcessExecutionRunner:
@@ -76,7 +60,7 @@ class ProcessExecutionRunner:
     async def sort(
         self, values: list[int], algorithm_ids: list[str], *, trace: bool = False
     ) -> SortExperiment:
-        return await self._submit(partial(_sort, values, algorithm_ids, trace))
+        return await self._submit(partial(run_sort_job, values, algorithm_ids, trace))
 
     async def benchmark(
         self,
@@ -88,11 +72,11 @@ class ProcessExecutionRunner:
         seed: int | None = None,
     ) -> BenchmarkResult:
         return await self._submit(
-            partial(_benchmark, values, algorithm_ids, repeats, warmups, seed)
+            partial(run_benchmark_job, values, algorithm_ids, repeats, warmups, seed)
         )
 
     async def suite(self, spec: SuiteSpec) -> BenchmarkSuiteResult:
-        return await self._submit(partial(_suite, spec))
+        return await self._submit(partial(run_suite_job, spec))
 
     async def close(self) -> None:
         self._closed = True
