@@ -2,12 +2,10 @@ import { useState } from 'react'
 import { api, request, type AlgorithmMetadata, type BenchmarkSuiteResult } from '../api/client'
 import { compactNumber } from '../charts/scale'
 import { LineChart, type LineSeries } from '../charts/LineChart'
-import { AlgorithmPicker } from '../shared/AlgorithmPicker'
 import { DISTRIBUTIONS, distributionLabel, errorMessage, formatCount, formatDuration, integerText, type Distribution } from '../shared/lab'
 
 const SIZE_PRESETS = [10, 25, 50, 100, 250, 500, 1000]
 const MAX_CASES = 12
-const MAX_ALGORITHMS = 10
 // Only three lines get a colour at once; the rest stay grey for context until picked in the legend.
 const COLOURED_LINES = 3
 
@@ -23,10 +21,9 @@ const METRICS: { id: Metric; label: string }[] = [
 interface SuiteSectionProps {
   algorithms: AlgorithmMetadata[]
   selected: string[]
-  onSelect: (selected: string[]) => void
 }
 
-export function SuiteSection({ algorithms, selected, onSelect }: SuiteSectionProps) {
+export function SuiteSection({ algorithms, selected }: SuiteSectionProps) {
   const [sizes, setSizes] = useState([50, 100, 250, 500])
   const [distributions, setDistributions] = useState<Distribution[]>(['random', 'reversed', 'nearly_sorted'])
   const [minimum, setMinimum] = useState(1)
@@ -166,7 +163,9 @@ export function SuiteSection({ algorithms, selected, onSelect }: SuiteSectionPro
           Repeats
           <input type="number" min={1} max={15} value={repeats} onChange={(event) => setRepeats(Math.max(1, Math.min(15, Number(event.target.value) || 1)))} />
         </label>
-        <AlgorithmPicker algorithms={algorithms} selected={selected} onChange={onSelect} max={MAX_ALGORITHMS} inputSize={largest} />
+        <p className="controls__hint">
+          Algorithms from Race: {selected.length ? selected.map(name).join(', ') : 'select at least one above'}
+        </p>
         <div className="controls__actions">
           {cases > MAX_CASES && <p className="controls__hint">Pick at most {MAX_CASES} size × pattern combinations.</p>}
           {tooLarge.length > 0 && (
@@ -190,7 +189,7 @@ export function SuiteSection({ algorithms, selected, onSelect }: SuiteSectionPro
           {error}
         </p>
       )}
-      {!result && !error && <p className="empty">{busy ? 'Running suite…' : 'Choose sizes, patterns and algorithms, then run the suite.'}</p>}
+      {!result && !error && <p className="empty">{busy ? 'Running suite…' : 'Choose sizes and patterns, then run the selected algorithms.'}</p>}
 
       {result && ranWith && (
         <>

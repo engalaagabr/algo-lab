@@ -11,7 +11,7 @@ import './shared/charts.css'
 export default function App() {
   const [mode, setMode] = useState<Mode>(initialMode)
   const [algorithms, setAlgorithms] = useState<AlgorithmMetadata[]>([])
-  // One selection for the whole page, so the benchmark and suite measure the algorithms in the race.
+  // One selection for the whole page, shared by the race, benchmark, and suite.
   const [selected, setSelected] = useState<string[]>(DEFAULT_ALGORITHMS)
   const [loadError, setLoadError] = useState<string | null>(null)
 
@@ -44,7 +44,7 @@ export default function App() {
         )}
         <RaceSection algorithms={algorithms} selected={selected} onSelect={setSelected} />
         <BenchmarkSection algorithms={algorithms} selected={selected} />
-        <SuiteSection algorithms={algorithms} selected={selected} onSelect={setSelected} />
+        <SuiteSection algorithms={algorithms} selected={selected} />
       </div>
     </div>
   )
