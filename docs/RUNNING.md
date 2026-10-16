@@ -76,32 +76,36 @@ endpoints. For complete requests and response fields, use [API.md](API.md).
 
 ## Docker and environment configuration
 
-Run Compose commands from the repository root. It builds the backend from `backend/`, reads
-the root `.env`, runs one Uvicorn worker, and publishes the API on host port 8000 by default.
+Run Compose commands from the repository root. Compose builds the API and the production web
+client. Nginx serves the frontend and proxies `/api` and `/health` requests to the API service
+on the internal Docker network, so the browser uses one origin and does not need CORS.
 
 ```bash
 cp .env.example .env
 docker compose up --build -d
 docker compose ps
-curl -sS http://127.0.0.1:8000/health
+curl -sS http://127.0.0.1:8081/health
+curl -sS http://127.0.0.1:8000/api/v1/algorithms
 ```
 
-The Compose health check also requests `/health`. View logs with
-`docker compose logs -f api`, then stop and remove the container and network with
-`docker compose down`.
+Open the site at `http://127.0.0.1:8081`, or the API docs directly at
+`http://127.0.0.1:8000/docs`. Follow service logs with `docker compose logs -f frontend`
+or `docker compose logs -f api`; stop the stack with `docker compose down`.
 
 `.env.example` contains the supported Compose settings. Copy it to `.env` for local changes;
 `.env` is ignored by Git and must not contain values that should be committed. Set
-`ALGOLAB_PORT` to change the host port, for example `8010`. The app still listens on port
-8000 inside the container. `ALGOLAB_CORS_ORIGINS` is an optional comma-separated list of
-frontend origins; leave it empty to keep CORS disabled. Recreate the container after changing
-settings with `docker compose up -d --force-recreate`.
+`ALGOLAB_WEB_PORT` to change the frontend's host port (default `8081`), and `ALGOLAB_PORT`
+to change the API's host port (default `8000`). The containers continue listening on ports 80
+and 8000 respectively. `ALGOLAB_CORS_ORIGINS` is only needed for a separate frontend origin;
+leave it empty for the Compose setup. Recreate the API container after changing its
+environment with `docker compose up -d --force-recreate api`.
 
-The image uses Python 3.12, installs the runtime package, and runs as a non-root user. Tests,
-docs, local UI files, virtual environments, and `.env` files are excluded from the build
-context. The container does not mount the source tree and is intended for repeatable local
-API runs; use the Python virtual environment workflow above for automatic reload during
-development.
+The API image uses Python 3.12, installs runtime dependencies, runs as a non-root user, and
+keeps one Uvicorn worker. The frontend image uses a multi-stage Node build and serves static
+files with Nginx. Both images exclude local dependencies, build output, tests, and `.env`
+files from their contexts. Compose waits for the API health check before starting the
+frontend. These images provide repeatable local runs; use the development workflows above for
+automatic reload.
 
 ## Execution and cancellation
 

@@ -1,17 +1,17 @@
 /* Charts and section furniture; colours come from the mode tokens in app.css. */
 .app {
-  /* Validated against each mode's panel (all pairs, CVD and normal vision); slots 2 and 3 also differ by dash. */
-  --series-1: #1fa383;
-  --series-2: #cf7426;
-  --series-3: #8d6be8;
+  /* Reference palette: blue, rose, and lime; line patterns distinguish the latter two as well. */
+  --series-1: #72b8ff;
+  --series-2: #ffabb7;
+  --series-3: #c9f33b;
   --chart-grid: color-mix(in srgb, var(--ink) 12%, transparent);
   --surface-ring: var(--panel);
 }
 
 .app[data-mode='light'] {
-  --series-1: #2a78d6;
-  --series-2: #eb6834;
-  --series-3: #1baf7a;
+  --series-1: #347fc6;
+  --series-2: #bd4f5b;
+  --series-3: #718e13;
 }
 
 .series--0 {
@@ -65,6 +65,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 12px 40px;
+  animation: rise-in 360ms ease both;
 }
 
 .summary__item {
@@ -136,11 +137,12 @@
 /* Chart shell */
 .chart {
   margin: 0;
-  background: var(--panel);
+  background: var(--chart-surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: 14px 16px;
   min-width: 0;
+  animation: rise-in 380ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
 }
 
 .chart__title {

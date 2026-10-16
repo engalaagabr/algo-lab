@@ -2,12 +2,11 @@ import { useState } from 'react'
 import { api, request, type AlgorithmMetadata, type BenchmarkResult } from '../api/client'
 import { BarChart, type BarRow } from '../charts/BarChart'
 import { compactNumber } from '../charts/scale'
-import { AlgorithmPicker } from '../shared/AlgorithmPicker'
+import { AlgorithmSelection } from '../shared/AlgorithmSelection'
 import { DatasetFields } from '../shared/DatasetFields'
 import { datasetBody, errorMessage, formatCount, formatDuration, type DatasetSettings } from '../shared/lab'
 
 const MAX_DATASET_SIZE = 10_000
-const MAX_ALGORITHMS = 10
 
 type Metric = 'time' | 'comparisons' | 'array_writes' | 'swaps'
 
@@ -84,10 +83,7 @@ export function BenchmarkSection({ algorithms, selected, onSelect }: BenchmarkSe
     <section className="section" aria-labelledby="benchmark-title">
       <header className="section__head">
         <h2 id="benchmark-title">Benchmark</h2>
-        <p>
-          Every algorithm sorts the same array {repeats} times. Times are measured on the server in Python and
-          describe this machine and this input only; animation speed in the race is not runtime.
-        </p>
+        <p>Compare measured performance on one dataset.</p>
       </header>
 
       <div className="controls">
@@ -102,13 +98,7 @@ export function BenchmarkSection({ algorithms, selected, onSelect }: BenchmarkSe
             <input type="number" min={0} max={3} value={warmups} onChange={(event) => setWarmups(Math.max(0, Math.min(3, Number(event.target.value) || 0)))} />
           </label>
         </div>
-        <AlgorithmPicker
-          algorithms={algorithms}
-          selected={selected}
-          onChange={onSelect}
-          max={MAX_ALGORITHMS}
-          inputSize={settings.size}
-        />
+        <AlgorithmSelection algorithms={algorithms} selected={selected} onChange={onSelect} />
         <div className="controls__actions">
           {tooLarge.length > 0 && (
             <p className="controls__hint">Unselect {tooLarge.map(name).join(', ')} or use a smaller size.</p>
@@ -124,8 +114,6 @@ export function BenchmarkSection({ algorithms, selected, onSelect }: BenchmarkSe
           {error}
         </p>
       )}
-      {!result && !error && <p className="empty">{busy ? 'Measuring…' : 'Choose a dataset and algorithms, then run the benchmark.'}</p>}
-
       {result && (
         <>
           <div className="summary">
