@@ -110,10 +110,6 @@ export function SuiteSection({ algorithms, selected }: SuiteSectionProps) {
     <section className="section" aria-labelledby="suite-title">
       <header className="section__head">
         <h2 id="suite-title">Suite</h2>
-        <p>
-          How does the work grow with the input? Each pattern gets its own chart, all on the same scale; within a
-          case every algorithm sorts the same array.
-        </p>
       </header>
 
       <div className="controls">
