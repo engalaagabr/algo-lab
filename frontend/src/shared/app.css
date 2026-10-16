@@ -1,26 +1,28 @@
 /*
- * Graphite: a quiet workbench with hairline seams where colour is reserved for state. Dark and
- * light modes redefine the same tokens; every layout rule below is shared.
+ * Graphite: a quiet workbench with hairline seams where colour is reserved for state. The
+ * palette follows the team's design file: lime for actions, mint for sorted values, and lime,
+ * pink, and blue for the traced operations. Dark and light modes redefine the same tokens;
+ * every layout rule below is shared.
  */
 .app {
-  --ground: #16181d;
-  --panel: #1c1f25;
-  --raised: #23272f;
-  --line: #2e323b;
-  --ink: #e6e6e6;
-  --muted: #8a8f99;
-  --accent: #7fd1b9;
-  --accent-ink: #16181d;
-  --bar-fill: #4a505c;
-  --bar-done: #7fd1b9;
+  --ground: #111317;
+  --panel: #22262c;
+  --raised: #2b3038;
+  --line: #383e48;
+  --ink: #f5f6f7;
+  --muted: #a7afbb;
+  --accent: #ccf148;
+  --accent-ink: #17191d;
+  --bar-fill: #4a515d;
+  --bar-done: #7bf9c8;
   /* Tracing colours: one per event kind, none shared with the sorted state. */
-  --compare: #f5c542;
-  --compare-ink: #16181d;
-  --swap: #ff6b81;
-  --swap-ink: #16181d;
-  --write: #6ea8ff;
-  --write-ink: #16181d;
-  --op-outline: #e6e6e6;
+  --compare: #ccf148;
+  --compare-ink: #17191d;
+  --swap: #ffb2b9;
+  --swap-ink: #67001e;
+  --write: #79b8ff;
+  --write-ink: #0c2a4d;
+  --op-outline: #f5f6f7;
   --error-line: #ff8a80;
   --error-bg: #3a1d1d;
   --error-ink: #ffd8d4;
@@ -38,23 +40,23 @@
 }
 
 .app[data-mode='light'] {
-  --ground: #f3f4f6;
+  --ground: #f5f6f7;
   --panel: #ffffff;
-  --raised: #f7f8fa;
-  --line: #dcdfe5;
-  --ink: #16181d;
+  --raised: #eef0f3;
+  --line: #d5d9e0;
+  --ink: #17191d;
   --muted: #5d6470;
-  --accent: #0f7d63;
-  --accent-ink: #ffffff;
+  --accent: #ccf148;
+  --accent-ink: #17191d;
   --bar-fill: #b4bac5;
   --bar-done: #1f9a78;
-  --compare: #e0a800;
-  --compare-ink: #16181d;
-  --swap: #d6336c;
+  --compare: #ccf148;
+  --compare-ink: #17191d;
+  --swap: #e8607b;
   --swap-ink: #ffffff;
-  --write: #2f6db5;
+  --write: #2c6ac0;
   --write-ink: #ffffff;
-  --op-outline: #16181d;
+  --op-outline: #17191d;
   --error-line: #b3261e;
   --error-bg: #fdecea;
   --error-ink: #5c1410;
@@ -100,6 +102,11 @@ body {
 .app :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+}
+
+/* Lime is too light to mark focus on white. */
+.app[data-mode='light'] :focus-visible {
+  outline-color: var(--ink);
 }
 
 /* Top bar */

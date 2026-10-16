@@ -1,17 +1,18 @@
 /* Charts and section furniture; colours come from the mode tokens in app.css. */
 .app {
-  /* Validated against each mode's panel (all pairs, CVD and normal vision); slots 2 and 3 also differ by dash. */
-  --series-1: #1fa383;
-  --series-2: #cf7426;
-  --series-3: #8d6be8;
+  /* The design file's lime, blue, and pink, stepped until they pass all-pairs CVD and contrast
+     checks on each mode's panel; slots 2 and 3 also differ by dash. */
+  --series-1: #86a00a;
+  --series-2: #3f92ea;
+  --series-3: #e8607b;
   --chart-grid: color-mix(in srgb, var(--ink) 12%, transparent);
   --surface-ring: var(--panel);
 }
 
 .app[data-mode='light'] {
-  --series-1: #2a78d6;
-  --series-2: #eb6834;
-  --series-3: #1baf7a;
+  --series-1: #5f7800;
+  --series-2: #2c6ac0;
+  --series-3: #e05a8f;
 }
 
 .series--0 {
