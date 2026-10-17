@@ -30,7 +30,9 @@ resource app 'Microsoft.App/containerApps@2026-07-01' = {
         external: externalIngress
         targetPort: effectivePort
         transport: 'http'
-        allowInsecure: false
+        // Internal API ingress accepts HTTP from the web app inside this environment.
+        // The API remains private because externalIngress is false.
+        allowInsecure: !externalIngress
       }
       registries: isPlaceholder ? [] : [
         {

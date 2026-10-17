@@ -13,6 +13,6 @@ FROM nginx:alpine
 COPY infra/nginx.azure.conf.template /etc/nginx/templates/default.conf.template
 COPY --from=build /app/dist /usr/share/nginx/html
 
-ENV API_UPSTREAM=http://ca-algolab-api-dev-cdbf:8000
+ENV API_UPSTREAM=http://ca-algolab-api-dev-cdbf.internal.redsmoke-2fae7249.uaenorth.azurecontainerapps.io
 ENV NGINX_ENVSUBST_FILTER=^API_UPSTREAM$
 EXPOSE 80
