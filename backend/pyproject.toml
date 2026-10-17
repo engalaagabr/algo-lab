@@ -1,0 +1,48 @@
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "algolab"
+version = "0.1.0"
+description = "An extensible sorting algorithm benchmarking and visualization API"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+  "fastapi>=0.143.2,<1",
+  "starlette>=1.8,<2",
+  "uvicorn>=0.34,<1",
+  "pydantic>=2.10,<3",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<10", "httpx2>=2.13,<3", "ruff>=0.11,<1", "mypy>=1.15,<2"]
+
+[tool.hatch.build.targets.wheel]
+packages = [
+  "src/algorithms",
+  "src/application",
+  "src/domain",
+  "src/infrastructure",
+  "src/presentation",
+]
+
+[tool.hatch.build.targets.wheel.force-include]
+"src/main.py" = "main.py"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+pythonpath = ["src"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+files = ["src"]
