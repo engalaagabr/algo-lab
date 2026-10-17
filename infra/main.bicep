@@ -99,7 +99,7 @@ module web './modules/container-app.bicep' = {
     registryServer: registry.outputs.loginServer
     pullIdentityResourceId: pullIdentity.outputs.identityResourceId
     environmentId: containerEnvironment.outputs.environmentId
-    apiUpstream: 'http://ca-algolab-api-dev-cdbf:8000'
+    apiUpstream: 'http://${api.outputs.ingressFqdn}'
     location: location
     tags: tags
   }
