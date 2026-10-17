@@ -60,6 +60,6 @@ This deployment is intentionally prepared for you to run manually. It creates th
 
 - Do not commit a real deployer's object ID if the parameters file is shared publicly; pass it via a local parameters override instead.
 - The backend `ALGOLAB_CORS_ORIGINS` is empty because browser calls use the same-origin Nginx proxy. `.env.example` contains only local host port settings and optional CORS; the host ports are not deployed.
-- The frontend proxy uses the API Container App internal FQDN over HTTPS. Nginx preserves the API hostname for TLS SNI and sends the backend response through the same-origin `/api/` route.
+- The frontend proxy uses the API Container App internal FQDN over HTTP inside the environment. The API ingress allows internal HTTP while remaining private, and Nginx sends responses through the same-origin `/api/` route.
 - Nginx rate-limits `/api/` requests per client IP. The deployment also caps replicas at two; review limits before broad public sharing.
 - ACR is Basic at about USD $5/month in the plan estimate. Container Apps and logs can incur charges beyond applicable included grants.

@@ -28,7 +28,7 @@ Pull Request
 
 دمج إلى main
   └─ CD: GitHub OIDC → ACR (بناء ورفع صور SHA) → API Container App → Web Container App
-       └─ نفس النطاق العام: واجهة Nginx → API داخلي عبر HTTPS
+       └─ نفس النطاق العام: واجهة Nginx → API عبر HTTP داخلي خاص ببيئة Container Apps
 ```
 
 الـ API لا يحتاج Ingress عامًا. صورة الـ API تُسحب إلى Container Apps بهوية Managed Identity عليها `AcrPull`، بينما هوية GitHub Actions تستخدم `AcrPush` لرفع الصور.
