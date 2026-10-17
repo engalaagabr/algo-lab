@@ -3,7 +3,7 @@
 Every algorithm sorts a caller-owned `list[int]` into ascending order through `SortContext`.
 The application must give each run its own copy of the experiment input. Algorithms do not
 copy or retain the shared original, read clocks, generate input, or import API types.
-`build_registry()` returns exactly the ten algorithms below, in the listed order.
+`build_registry()` returns the algorithms below, in the listed order.
 
 ## Implemented variants and limits
 
@@ -25,6 +25,7 @@ counted operations.
 | `shell_sort` | O(n log n) | Not claimed | O(n²) | O(1) | 1,000 |
 | `heap_sort` | O(n), equal keys allowed | O(n log n) | O(n log n) | O(1) | 10,000 |
 | `quick_sort` | O(n), all keys equal | O(n log n), random input order | O(n²) | O(log n) | 10,000 |
+| `merge_sort` | O(n log n) | O(n log n) | O(n log n) | O(n) | 10,000 |
 
 - **Selection:** scan each unsorted suffix for its minimum, then exchange it into place.
   Equal minima are not exchanged during the scan, but the final nonadjacent exchange makes
@@ -64,18 +65,22 @@ counted operations.
   pivot or a worst-case guarantee. See Princeton's descriptions of
   [three-way partitioning](https://algs4.cs.princeton.edu/23quicksort/index.php) and
   [smaller-partition-first nonrecursive quicksort](https://www.cs.princeton.edu/courses/archive/spr03/cs226/demo/qsort/).
+- **Merge:** recursively split the array, merge sorted halves into one reusable buffer, and
+  copy each merged range back. Choosing the left value when keys compare equal preserves
+  stability. Each merge writes its range to the auxiliary buffer and then to the main array.
 
-Bubble, odd-even, cocktail, insertion, and binary insertion are stable because they never
-move an equal value ahead of another equal value. For plain integers this property is not
-observable; it describes the comparison-and-movement rule. Selection, frequency, shell,
-heap, and quick make no stability guarantee.
+Bubble, odd-even, cocktail, insertion, binary insertion, and merge sort are stable because
+they never move an equal value ahead of another equal value. For plain integers this property
+is not observable; it describes the comparison-and-movement rule. Selection, frequency,
+shell, heap, and quick make no stability guarantee.
 
 `in_place=True` means the algorithm rearranges the working array without an auxiliary
-value array. Quick Sort still needs its explicitly reported O(log n) bookkeeping stack.
+value array. Quick Sort still needs its explicitly reported O(log n) bookkeeping stack;
+Merge Sort uses a reusable O(n) buffer.
 Frequency Sort has `in_place=False` because it allocates the O(k) histogram.
 
 The application uses `workload` as an admission estimate: `quadratic` for Quick and the
-seven conservatively capped algorithms, `n_log_n` for Heap, and `linear_range` for Frequency.
+seven conservatively capped algorithms, `n_log_n` for Heap and Merge, and `linear_range` for Frequency.
 Quick reserves quadratic work to account for adversarial median-of-three inputs; its
 theoretical average remains O(n log n). A hard size limit and the aggregate work budget
 both apply, so large repeated Quick experiments may be rejected below 10,000 elements.
@@ -95,10 +100,13 @@ is used as an alternate implementation when instrumentation is disabled.
   a final assignment when the value stayed in its original place.
 - Frequency initializes `k` histogram cells and increments `n` cells: `k + n` auxiliary
   writes for a nontrivial input. It then makes `n` main-array writes and no swaps.
+- Merge counts the initial `n` buffer cells and each element written to the reusable buffer
+  per merge level. It then writes each merged range back to the main array.
 - Quick counts each stored pending interval bound: two auxiliary writes per deferred
   interval. Popping bounds removes entries rather than assigning entries. Scalar pivot,
   loop, bound, and insertion-key assignments are excluded.
-- The other algorithms use no auxiliary containers, so their auxiliary writes are zero.
+- Selection, Bubble, Odd-Even, Cocktail, Insertion, Binary Insertion, Shell, and Heap use no
+  auxiliary containers, so their auxiliary writes are zero.
 
 Comparison events include operand values and available source indices. A held insertion
 key, pivot, or remembered minimum/maximum may no longer have an array source index; these
