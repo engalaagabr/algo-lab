@@ -17,11 +17,11 @@ class QuickSort(SortingAlgorithm):
                 comparisons[0] += 1
                 if arr[j] <= pivot:
                     i += 1
-                    # التبديل بالطريقة الآمنة
+                       
                     arr[i], arr[j] = arr[j], arr[i]
                     swaps[0] += 1
                     
-            # وضع الـ pivot في مكانه الصحيح بأمان
+                
             arr[i + 1], arr[high] = arr[high], arr[i + 1]
             swaps[0] += 1
             return i + 1
