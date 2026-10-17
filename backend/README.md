@@ -6,7 +6,7 @@ are registered in Python and run behind the application layer; the API also repo
 complexity metadata and operation counts.
 
 The current algorithm set is Selection, Bubble, Odd-Even, Cocktail, Insertion, Binary
-Insertion, Frequency (Counting), Shell, Heap, and Quick Sort. Planned search, graph,
+Insertion, Frequency (Counting), Shell, Heap, Quick, and Merge Sort. Planned search, graph,
 dynamic-programming, and backtracking features are not implemented in the API yet.
 
 ## Run and develop

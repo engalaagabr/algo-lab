@@ -70,7 +70,7 @@ GET /api/v1/algorithms
 ```text
 selection_sort  bubble_sort  odd_even_sort  cocktail_sort
 insertion_sort  binary_insertion_sort  frequency_sort
-shell_sort      heap_sort    quick_sort
+shell_sort      heap_sort    quick_sort     merge_sort
 ```
 
 ### ب. المستخدم ينشئ بيانات
