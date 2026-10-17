@@ -1,5 +1,7 @@
 # GitHub Actions to Azure CI/CD
 
+For the full Arabic walkthrough from Azure provisioning through CI/CD, custom domains, and the separate production setup, see [دليل نشر AlgoLab على Azure](AZURE-DEPLOYMENT-AR.md).
+
 The workflow in `.github/workflows/ci-cd.yml` checks pull requests targeting `dev` or `main`. On every push to `main` (including a pull request merge), it runs the same checks, builds versioned API and frontend container images, pushes them to Azure Container Registry (ACR), and updates the existing Azure Container Apps. Images are tagged with the full Git commit SHA so each deployment can be traced to its source commit.
 
 The workflow deploys application code to existing Azure resources. It does not create or change infrastructure. The Azure Container Apps and registry must be provisioned once using the manual infrastructure guide before the first deployment.
