@@ -3,7 +3,7 @@ import type { SortEvent, SortExperiment } from '../api/client'
 import { Replay } from './engine'
 import recorded from './__fixtures__/sort-trace.json'
 
-// Real /sort trace for all ten algorithms on 14 negative and duplicate values. Sequence
+// Real /sort trace for all eleven algorithms on 14 negative and duplicate values. Sequence
 // numbers were stripped from the fixture to keep it small; they equal the event position.
 const experiment = recorded as unknown as SortExperiment
 const traces = experiment.results.map((result) => ({

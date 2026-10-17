@@ -28,6 +28,7 @@ ALGORITHM_IDS = {
     "shell_sort",
     "heap_sort",
     "quick_sort",
+    "merge_sort",
 }
 DISTRIBUTIONS = ["random", "sorted", "reversed", "nearly_sorted", "few_unique"]
 
@@ -111,11 +112,11 @@ def test_health_is_independent_of_execution_worker() -> None:
     assert runner.calls == 0
 
 
-def test_catalog_contains_exactly_the_ten_agreed_algorithms(client: TestClient) -> None:
+def test_catalog_contains_exactly_the_eleven_supported_algorithms(client: TestClient) -> None:
     response = client.get("/api/v1/algorithms")
     assert response.status_code == 200
     catalog = response.json()
-    assert len(catalog) == 10
+    assert len(catalog) == 11
     assert {algorithm["id"] for algorithm in catalog} == ALGORITHM_IDS
     for algorithm in catalog:
         assert set(algorithm["complexity"]) >= {"best", "average", "worst", "auxiliary_space"}
@@ -176,13 +177,13 @@ def test_each_algorithm_returns_replayable_trace_and_serialized_metrics(
     assert reconstructed == result["output_values"]
 
 
-def test_all_algorithms_receive_same_input_in_one_request(client: TestClient) -> None:
+def test_selected_algorithms_receive_same_input_in_one_request(client: TestClient) -> None:
     values = [5, -1, 5, 0]
     response = client.post(
         "/api/v1/sort",
         json={
             "values": values,
-            "algorithm_ids": sorted(ALGORITHM_IDS),
+            "algorithm_ids": sorted(ALGORITHM_IDS)[:10],
         },
     )
     assert response.status_code == 200

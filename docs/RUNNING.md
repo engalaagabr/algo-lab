@@ -136,7 +136,7 @@ header. Oversized bodies receive HTTP 413. Schema validation then applies numeri
 repetition, and suite limits.
 
 The general array limit is 10,000 integer elements. Selection, Bubble, Odd-Even, Cocktail,
-Insertion, Binary Insertion, and Shell are capped at 1,000 each. Heap, Quick, and Frequency
+Insertion, Binary Insertion, and Shell are capped at 1,000 each. Heap, Quick, Merge, and Frequency
 advertise a 10,000-element cap; Frequency also requires an inclusive actual value span of at
 most 100,000. Traces are limited to 128 elements and 20,000 events per algorithm.
 

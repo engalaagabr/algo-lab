@@ -23,8 +23,8 @@ families.
   shortcuts.
 
 The current sorting algorithms are Selection, Bubble, Odd-Even, Cocktail, Insertion, Binary
-Insertion, Frequency (Counting), Shell, Heap, and Quick Sort. The API also describes each
-algorithm's time and auxiliary-space complexity. Trace output is limited to 128 values so
+Insertion, Frequency (Counting), Shell, Heap, Quick, and Merge Sort. The API also describes
+each algorithm's time and auxiliary-space complexity. Trace output is limited to 128 values so
 that playback remains useful and responsive.
 
 ## Planned algorithm areas

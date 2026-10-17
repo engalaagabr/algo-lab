@@ -10,6 +10,7 @@ from . import (
     frequency_sort,
     heap_sort,
     insertion_sort,
+    merge_sort,
     odd_even_sort,
     quick_sort,
     selection_sort,
@@ -20,7 +21,7 @@ __all__ = ["build_registry"]
 
 
 def build_registry() -> AlgorithmRegistry:
-    """Build a fresh registry with the ten supported algorithms in display order."""
+    """Build a fresh registry with the supported algorithms in display order."""
     return AlgorithmRegistry(
         [
             Algorithm(selection_sort.metadata, selection_sort.sort),
@@ -33,5 +34,6 @@ def build_registry() -> AlgorithmRegistry:
             Algorithm(shell_sort.metadata, shell_sort.sort),
             Algorithm(heap_sort.metadata, heap_sort.sort),
             Algorithm(quick_sort.metadata, quick_sort.sort),
+            Algorithm(merge_sort.metadata, merge_sort.sort),
         ]
     )

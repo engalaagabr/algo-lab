@@ -6,7 +6,8 @@ from main import create_app
 def test_real_process_worker_runs_all_experiment_endpoints_and_preserves_errors():
     with TestClient(create_app()) as client:
         assert client.get("/health").status_code == 200
-        identifiers = [item["id"] for item in client.get("/api/v1/algorithms").json()]
+        all_identifiers = [item["id"] for item in client.get("/api/v1/algorithms").json()]
+        identifiers = all_identifiers[:9] + ["merge_sort"]
         values = [5, -1, 3, 3, 0]
         response = client.post(
             "/api/v1/sort",
@@ -26,7 +27,7 @@ def test_real_process_worker_runs_all_experiment_endpoints_and_preserves_errors(
         response = client.post(
             "/api/v1/benchmark-suites",
             json={
-                "algorithm_ids": ["heap_sort", "quick_sort"],
+                "algorithm_ids": ["heap_sort", "quick_sort", "merge_sort"],
                 "sizes": [0, 16],
                 "distributions": ["random", "reversed"],
                 "repeats": 2,

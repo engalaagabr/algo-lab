@@ -19,7 +19,7 @@ All successful endpoints below return HTTP 200.
 | Method | Path | Purpose |
 | --- | --- | --- |
 | GET | `/health` | API process liveness and version |
-| GET | `/api/v1/algorithms` | List all ten algorithm metadata objects |
+| GET | `/api/v1/algorithms` | List all eleven algorithm metadata objects |
 | GET | `/api/v1/algorithms/{algorithm_id}` | Get one algorithm's metadata |
 | POST | `/api/v1/datasets` | Generate a reproducible integer dataset |
 | POST | `/api/v1/sort` | Sort identical input copies, count operations, optionally capture traces |
@@ -40,7 +40,7 @@ Algorithm IDs are:
 selection_sort        bubble_sort          odd_even_sort
 cocktail_sort         insertion_sort       binary_insertion_sort
 frequency_sort        shell_sort           heap_sort
-quick_sort
+quick_sort             merge_sort
 ```
 
 Metadata fields are `id`, `name`, `description`, `complexity`, `stable`, `in_place`,
@@ -207,7 +207,7 @@ suite returns an error, not partial case results. Nothing is stored after the re
 | Integer values and generation bounds | −1,000,000,000 through 1,000,000,000, inclusive |
 | General array size | 0–10,000 elements |
 | Selection, Bubble, Odd-Even, Cocktail, Insertion, Binary Insertion, Shell | At most 1,000 elements each |
-| Heap, Quick, Frequency | At most 10,000 elements each, also subject to the aggregate budget |
+| Heap, Quick, Merge, Frequency | At most 10,000 elements each, also subject to the aggregate budget |
 | Frequency's actual inclusive value span | At most 100,000 |
 | Selected algorithms | 1–10 unique registered IDs |
 | Algorithm ID text | 1–64 characters |

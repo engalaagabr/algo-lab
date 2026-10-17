@@ -22,6 +22,7 @@ ALGORITHM_IDS = (
     "shell_sort",
     "heap_sort",
     "quick_sort",
+    "merge_sort",
 )
 
 EDGE_CASES = (
@@ -68,7 +69,9 @@ def test_registry_has_exactly_the_supported_algorithms_and_limits() -> None:
     assert tuple(item.id for item in metadata) == ALGORITHM_IDS
     for item in metadata:
         assert item.max_size == (
-            10_000 if item.id in {"heap_sort", "quick_sort", "frequency_sort"} else 1000
+            10_000
+            if item.id in {"heap_sort", "quick_sort", "merge_sort", "frequency_sort"}
+            else 1000
         )
         assert item.max_value_range == (100_000 if item.id == "frequency_sort" else None)
         assert registry.get(item.id).metadata is item
@@ -149,6 +152,7 @@ def test_trace_events_do_not_depend_on_metric_collection(identifier: str) -> Non
         ("shell_sort", (1, 0, 2, 0), (1, 0, 0, 0)),
         ("heap_sort", (1, 1, 2, 0), (1, 2, 4, 0)),
         ("quick_sort", (5, 1, 2, 0), (4, 0, 0, 0)),
+        ("merge_sort", (1, 0, 2, 4), (1, 0, 2, 4)),
     ],
 )
 def test_known_two_element_metrics(
@@ -202,7 +206,7 @@ def test_frequency_sort_counts_negative_offsets_and_rejects_large_ranges() -> No
     assert boundary.metrics.auxiliary_writes == 100_002
 
 
-@pytest.mark.parametrize("identifier", ["quick_sort", "heap_sort", "frequency_sort"])
+@pytest.mark.parametrize("identifier", ["quick_sort", "heap_sort", "merge_sort", "frequency_sort"])
 def test_large_inputs_at_the_declared_limit(identifier: str) -> None:
     algorithm = build_registry().get(identifier)
     rng = Random(29)
@@ -243,3 +247,9 @@ def test_variant_specific_complexity_and_frequency_semantics_are_explicit() -> N
     assert not frequency.comparison_based
     assert not frequency.stable
     assert not frequency.in_place
+
+    merge = registry.get("merge_sort").metadata
+    assert merge.complexity.worst == "O(n log n)"
+    assert merge.complexity.auxiliary_space == "O(n)"
+    assert merge.stable
+    assert not merge.in_place
