@@ -1,4 +1,9 @@
 limit_req_zone $binary_remote_addr zone=api_per_ip:10m rate=5r/s;
+map "$http_sec_fetch_dest:$http_accept" $api_browser_navigation {
+    default 0;
+    "~*document:" 1;
+    "~*:.*text/html" 1;
+}
 
 server {
     listen 80;
@@ -16,6 +21,11 @@ server {
     add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'" always;
 
     location ^~ /api/ {
+        # Keep API calls available to the app, but don't render raw JSON as a page
+        # when someone opens an API URL directly in a browser tab.
+        if ($api_browser_navigation) {
+            return 404;
+        }
         limit_except GET POST {
             deny all;
         }
